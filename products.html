@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MVC Test | Adam Lawrence</title>
+    
+    <link rel="shortcut icon" href="img/logo.png">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,500,500italic|Open+Sans:400,300,700,600,300italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/screen.css?v1.1" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+	<script type="text/javascript" src="js/preLoader.js?v1.1"></script>
+	<script type="text/javascript" src="js/createList.js?v1.1"></script>
+	<script type="text/javascript" src="js/init-products.js?v1.1"></script>
+	
+    <style>
+    	
+		body
+		{
+			overflow-y:scroll;
+		}
+		
+		#results a:hover
+		{
+			color: #4bc9bd;
+		}
+		
+		#resultsItemName li, #resultsGroupName li
+		{
+			-webkit-transition: all 0.5s ease-in-out;
+			-moz-transition: all 0.5s ease-in-out;
+			-o-transition: all 0.5s ease-in-out;
+			transition: all 0.5s ease-in-out;
+		}
+		
+		#resultsItemName li:hover, #resultsGroupName li:hover 
+		{
+			-webkit-box-shadow: 0px 0px 6px 0px rgba(50, 50, 50, 0.25);
+			-moz-box-shadow: 0px 0px 6px 0px rgba(50, 50, 50, 0.25);
+			box-shadow: 0px 0px 6px 0px rgba(50, 50, 50, 0.25);
+		}
+		
+    </style>
+    
+</head>
+
+<body>
+    
+    <header class="prm box-shadow ease_sd p_m p_l_right" style="font-size:1.1em">
+		<section>
+            <img id="header_logo" class="fl_lt m_m_left" src="svg/logo.svg?v1.1" alt="" />
+            <span class="fl_lt txt_fff m_l_left m_m_top" >
+                <a href="#" class="txt_sm productsLink">Products</a> > 
+                <a href="#" class="txt_sm productLabel"></a> 
+            </span>
+            <div class="clearfix"></div>
+    	</section>
+    </header>	
+    
+    <main class="relative p_l align_lt bg_fff p_l_top">
+    	<section>
+        
+            <ul id="resultsItemName" class="justify thirds inline clearfix m_l_top">
+            </ul>
+            
+            <ul id="resultsGroupName" class="justify thirds inline clearfix m_l_top">
+            </ul>
+            
+            <div id="templates" class="hidden">
+                <li id="templateItemName" class="m_m_top m_m_bottom clearfix align_ct">
+                    <a href="#">
+                        <img class="_100 p_l" src="" alt="" />
+                        <div class="p_m"><b><span class="itemName p_m_top"></span></b></div>
+                    </a>
+                </li>
+                <li id="templateGroupName" class="m_m_top m_m_bottom clearfix align_ct">
+                    <a href="#">
+                        <img class="_100 p_l" src="" alt="" />
+                        <p>
+                        <b><span class="description"></span></b><br/>
+                        <span class="groupName"></span><br/>
+                        <span class="txt_red price"></span>
+                        </p>
+                    </a>
+                </li>
+			</div>
+            
+        </section>
+	</main>
+
+<script>
+
+$(function()
+{
+	$('main').css({'margin-top' : $('header').height()+'px', 'min-height': '100%'});    
+});
+
+</script>
+    
+</body>
+</html>

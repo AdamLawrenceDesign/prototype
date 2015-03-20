@@ -1,0 +1,12 @@
+
+SASS watch
+
+C:\xampp\htdocs\sass-test>sass --watch sass\screen.scss:css\screen.css
+
+SASS Compress File
+
+C:\xampp\htdocs\sass-test>sass -t compressed sass/screen.scss css/screen.css
+
+C:\xampp\htdocs\sass-test>sass -t compass sass\master.scss css\master.css
+
+cd /d X:\
