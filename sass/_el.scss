@@ -394,17 +394,11 @@ div[id^="assets"]
 	height:auto
 }
 
-canvas 
-{
-    -webkit-transition: all .5s;
-    -moz-transition: all .5s;
-    transition: all .5s;
-}
-
 .canvas-container 
 {
-	position:absolute;
-	margin:auto;
+	background:#fff;
+	@extend .absolute_vert_center;
+	position:absolute !important;
 	margin:auto;
 	cursor:pointer;
 	/* @extend .box-shadow-lt; */
@@ -560,11 +554,6 @@ canvas:hover
 aside a:hover
 {
 	color:#4bc9bd;
-}
-
-.canvas-container
-{
-	background:#fff;
 }
 
 .canvas-transitions

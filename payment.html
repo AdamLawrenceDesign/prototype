@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Facebook Login | Adam Lawrence</title>
+    
+    <link rel="shortcut icon" href="img/logo.png">
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,500,500italic|Open+Sans:400,300,700,600,300italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/screen.css?v1.1" />
+    
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="js/style.js"></script>
+	<script type="text/javascript" src="js/facebook-info.js"></script>
+
+    <style>
+		body
+		{
+			background-image:  url(img/landing/3.jpg)!important;
+		}
+	</style>
+    
+<body>
+
+    
+    <header class="prm box-shadow ease_sd p_m" style="font-size:1.1em">
+		<section>
+            <img id="header_logo" class="fl_lt m_m_left" src="svg/logo.svg?v1.1" alt="" />
+            <span class="fl_lt txt_fff m_l_left m_m_top" >Payment
+            </span>
+            <div class="clearfix"></div>
+    	</section>
+    </header>	
+
+	<main class="relative p_l align_lt bg_fff p_l_top">
+    	
+        <section>
+             <div class="_60_m p_l_top txt_sm">    
+                                                                                                       
+                <label class="_50_m p_m_top p_m_bottom m_m_top">Your Name: <span class="txt_red">*</span></label>
+                <span class="_50_m input_area m_m_top"><input type="text" id="name" /></span>
+                  
+                <div class="clearfix"></div>  
+                                                                                                   
+                <label class="_50_m p_m_top p_m_bottom m_m_top">Email Address: <span class="txt_red">*</span></label>
+                <span class="_50_m input_area m_m_top"><input type="text" id="email" /></span>
+                
+                <div class="clearfix"></div>
+                
+                <label class="_50_m p_m_top p_m_bottom m_l_top m_l_bottom">Delivery Address: <span class="txt_red txt_sm">Required Field*</span></label>
+                <div class="clearfix"></div>
+                
+                <label class="_50_m p_m_top p_m_bottom m_m_top">Street Address: <span class="txt_red">*</span></label>
+                <span class="_50_m input_area m_m_top"><input type="text" id="txtAddress" /></span>
+                
+                <div class="clearfix"></div>
+                         
+                <label class="_50_m m_m_top p_m_top p_m_bottom">Suburb: <span class="txt_red">*</span></label>
+                <span class="_50_m input_area m_m_top"><input type="text" id="txtTown" /></span>
+
+                <div class="clearfix"></div>
+                
+                <label class="_50_m p_m_top p_m_bottom  m_m_top">State: <span class="txt_red">*</span></label>
+
+                <span class="input_area_select relative _33_s m_m_top">
+                    <select>
+                        <option>Select State</option>
+                        <option>ACT</option>
+                        <option>NSW</option>
+                        <option>QLD</option>
+                        <option>SA</option>
+                        <option>VIC</option>
+                        <option>NT</option>
+                        <option>WA</option>
+                        <option>TAS</option>
+                    </select>
+                    <label class="icon-arrow_full_down border_box"></label>
+               </span> 
+                
+               <div class="clearfix"></div>
+
+               <label class="_50_m p_m_top p_m_bottom m_m_top">Postcode: <span class="txt_red">*</span></label>
+               <span class="_20_m input_area m_m_top"><input type="text" id="txtTown" /></span>
+               
+               <div class="clearfix"></div>
+               
+               <div class="underline-solid m_l_top m_l_bottom"></div>
+                
+               <label class="_50_m  p_m_top p_m_bottom ">Amount ($): <span class="txt_red">*</span></label>
+               <span class="_50_m input_area "><input type="text" id="txtTown" /></span>
+                 
+               <div class="clearfix"></div>
+                 
+               <div class="underline-solid m_l_top"></div> 
+                
+                <label class="_50_m p_m_top p_m_bottom m_l_top m_l_bottom">Payment Details: <span class="txt_red txt_sm">Required Field*</span></label>
+                <div class="clearfix"></div>
+
+               <label class="_50_m p_m_top p_m_bottom ">Select Card type: <span class="txt_red">*</span></label>
+                
+               <span class="input_area_select relative _33_s">
+                    <select>
+                        <option>Select</option>
+                        <option>VISA</option>
+                        <option>MASTERCARD</option>
+                    </select>
+                    <label class="icon-arrow_full_down border_box"></label>
+               </span> 
+                          
+               <div class="clearfix"></div> 
+                             
+               <label class="_50_m p_m_top p_m_bottom m_m_top">Card Holders Name: <span class="txt_red">*</span></label>
+               <span class="_50_m input_area m_m_top"><input type="text" id="CardHoldersName" /></span>
+                
+               <div class="clearfix"></div> 
+                             
+               <label class="_50_m p_m_top p_m_bottom m_m_top">Credit Card Number: <span class="txt_red">*</span></label>
+               <span class="_50_m input_area m_m_top"><input type="text" id="CreditCardNumber" MaxLength="16" autocomplete="off"/></span>
+               
+               <div class="clearfix"></div>
+               
+               <label class="_50_m p_m_top p_m_bottom m_m_top">Card Security Code:  <span class="txt_red">*</span>
+               </label>
+               
+               <span class="input_area _20_m m_m_top"><input type="text" id="CardSecurityCode" MaxLength="4" autocomplete="off"/></span>
+               
+               <div class="clearfix"></div>
+                   
+                <label class="_50_m p_m_top p_m_bottom m_m_top">Expiry Date: <span class="txt_red">*</span></label>
+                 
+                <div class="_50_m m_m_top">
+                   <span class="input_area_select relative _33_s">
+                        <select>
+                            <option></option>
+                            <option></option>
+                        </select>
+                        <label class="icon-arrow_full_down border_box"></label>
+                   </span> 
+                    
+                    <span class="fl_lt m_m_left  m_m_right">/</span>
+                    
+                   <span class="input_area_select relative _33_s">
+                        <select>
+                            <option></option>
+                        </select>
+                        <label class="icon-arrow_full_down border_box"></label>
+                   </span> 
+               </div>
+                 
+               <div class="underline-solid m_l_top m_l_bottom"></div> 
+               
+                
+                
+        	</div>
+        </section>
+    
+    </main>
+    
+<script>
+
+$(function()
+{
+	$('main').css('margin-top', $('header').height() + 'px');
+	
+		
+});
+
+</script>
+    
+</body>
+</html>

@@ -49,6 +49,8 @@ function Page(product)
 	this.portrait = '';
 	this.landscape = '';
 	this.current = '';
+	this.cropMarks = false;
+	this.cropRatio = false;
 	this.init();
 }; 
 
@@ -92,25 +94,36 @@ Page.prototype.setUpCanvas = function(width, height)
 	this.setOrientation($('main').innerWidth()*.6, $('main').innerHeight()*.65, width, height, function(width,height)
 	{
 		canvas.clear();							// incase change during build
-		$this.setWidthHeight(width, height);
-		canvas.add(placeholder);
-		canvas.renderAll();
-		$('.canvas-container').css({'margin':'auto','position':'absolute'}).addClass('absolute_vert_center');		
+		setTimeout(function()
+		{
+			$this.setWidthHeight(width, height);
+			canvas.add(placeholder);
+			canvas.renderAll();
+		},400 );
 	});
 	this.canvasResize();
 };
 
 Page.prototype.setWidthHeight = function(width,height)
 {
+	var $this;
+	$this = this;
+	
 	$('canvas, .canvas-container').addClass('canvas-transitions');
 	
-	setTimeout(function()
+	canvas.setWidth(width);
+	canvas.setHeight(height);
+	placeholder.setWidth(width);
+	placeholder.setHeight(height);
+	
+	if(!this.cropMarks)
 	{
-		canvas.setWidth(width);
-		canvas.setHeight(height);
-		placeholder.setWidth(width);
-		placeholder.setHeight(height);
-	},400);
+		setTimeout(function()
+		{
+			$('#cropMark').css({'height': height*$this.cropRatio.width +'px','width': width*$this.cropRatio.width + 'px','display':'block'});
+		},400);
+	}
+	
 };
 
 Page.prototype.setOrientation = function(maxWidth, maxHeight, width, height, callback)
@@ -143,20 +156,23 @@ Page.prototype.setOrientation = function(maxWidth, maxHeight, width, height, cal
 
 Page.prototype.canvasResize = function()
 {
-	var string, width, height, insert;
+	var $this, string, width, height, insert, cropWidth, cropHeight, cropDisplay, wrapCrop;
+	$this = this;
+	wrapCrop = $('#cropMark');
 	
-	function changeSize(string, ratio)
+	function changeSize(string, ratio, callback)
 	{
-		string = eval(JSON.stringify(canvas).replace('{"objects":','').replace(',"background":"#fff"}',''));
 		width = string[0].width*ratio;
 		height = string[0].height*ratio;
-		canvas.setWidth(width);
-		canvas.setHeight(height);
 		
 		if($('main').innerWidth()-150 <= width*ratio) return;
 		if($('main').innerHeight()-150 <= height*ratio) return;
-		
+
+		$('#cropMark').css('display','none'); 
+
 		canvas.clear();
+		canvas.setWidth(width);
+		canvas.setHeight(height);
 		
 		for(var i = 0; i < string.length; i++)
 		{
@@ -175,25 +191,37 @@ Page.prototype.canvasResize = function()
 					break;
 			};
 			string[0].selectable = false;
-			
 		};
-
+		
 		insert = '{"objects":' + JSON.stringify(string) + ',"background":"#fff"}';
 		canvas.loadFromJSON(insert);
 		canvas.renderAll();
+		callback(ratio);
+	};
+	
+	function cropDisplay(wrapCrop,ratio)
+	{
+		wrapCrop.css({'width':wrapCrop.outerWidth()*ratio+'px','height':wrapCrop.outerHeight()*ratio + 'px'}).fadeIn();
 	};
 	
 	this.userInput('click', '#zoom', '#canvasLarger', function(classes, el, event)
 	{
-		changeSize(string,1.09);
+		changeSize(eval(JSON.stringify(canvas).replace('{"objects":','').replace(',"background":"#fff"}','')),1.09, function(ratio)
+		{
+			cropDisplay(wrapCrop,ratio);
+		});
 	});
 		
 	this.userInput('click', '#zoom', '#canvasSmaller', function(classes, el, event)
 	{
 		if($('canvas').height()<150)return;
 		if($('canvas').width()<150)return;
-		changeSize(string, .92);
+		changeSize(eval(JSON.stringify(canvas).replace('{"objects":','').replace(',"background":"#fff"}','')),.92, function(ratio)
+		{
+			cropDisplay(wrapCrop,ratio);
+		});
 	});	
+	
 };
 
 Page.prototype.windowResize = function()
@@ -373,7 +401,7 @@ Page.prototype.showInfo = function()
 	wrap.find('.description').html($this.product.description);
 	wrap.find('.itemName').html($this.product.itemName);
 	wrap.find('.price').html('$ ' + $this.product.unitPrice);
-	wrap.find('img').attr('src','img/products/' + $this.product.id + '.jpg');
+	wrap.find('.productImage').attr('src','img/products/' + $this.product.id + '.jpg');
 };
 
 Page.prototype.orientation = function()
@@ -381,11 +409,17 @@ Page.prototype.orientation = function()
 	var $this;
 	$this = this;
 	
-	$('#orientationLinks').on('click','a', function()
+	function resetPage()
 	{
 		canvas.setWidth(0);
 		canvas.setHeight(0);
-		
+		$('#cropMark').css('display','none');
+	};
+	
+	$('#orientationLinks').on('click','a', function()
+	{
+		resetPage();
+
 		switch ($(this).attr('id'))
 		{
 			case 'landscape':
@@ -400,6 +434,8 @@ Page.prototype.orientation = function()
 	
 	$('#zoom').on('click', '#rotate', function()
 	{
+		resetPage();
+		
 		switch ($this.current)
 		{
 			case 'landscape':
@@ -413,37 +449,54 @@ Page.prototype.orientation = function()
 	});
 };
 
-Page.prototype.cropRatio = function()
+Page.prototype.createCropObj = function()
 {
-	console.log(this.product.widthMM / this.product.fwidthMM)
-	console.log(this.product.heightMM / this.product.fheightMM)
+	var width, height, obj, rw, rh;
+	
+	obj = document.createElement('div');
+	rw = this.product.fwidthMM/this.product.widthMM;
+	rh = this.product.fheightMM/this.product.heightMM;
+	
+	this.cropObj = obj;
+	this.cropRatio = {width : rw, height : rh};
+	
+	$(obj).attr('id','cropMark').css({'display':'none','position':'absolute','pointer-events':'none','margin':'auto','z-index':'2000','border':'1px dashed #ddd', 'width': width, 'height': height }).addClass('absolute_vert_center');
+	$('#wrapCanvas').append(obj);
+	
+};
+
+Page.prototype.crop = function()
+{
+	if(this.product.widthMM != this.product.fwidthMM && this.product.heightMM != this.product.fwidthMM)
+	{
+		this.createCropObj();
+	}; 
+	
+	this.setUp();
+	this.setUpCanvas(this.product.widthMM, this.product.heightMM);
+	
+	if(this.product.widthMM > this.product.heightMM)				// landscape
+	{	
+		this.portrait = {'width':this.product.widthMM, 'height': this.product.heightMM, 'cropW': this.product.fwidthMM, 'cropH': this.product.fheightMM };
+		this.landscape = {'width':this.product.heightMM, 'height': this.product.widthMM, 'cropW': this.product.fheightMM, 'cropH': this.product.fwidthMM  };
+	} 
+	else													// Portrait
+	{
+		this.portrait = {'width':this.product.heightMM, 'height': this.product.widthMM, 'cropW': this.product.fheightMM, 'cropH': this.product.fwidthMM  };
+		this.landscape = {'width':this.product.widthMM, 'height': this.product.heightMM, 'cropW': this.product.fwidthMM, 'cropH': this.product.fheightMM  };
+	};
+	this.links();
 };
 
 Page.prototype.init = function()
 {
-	console.log(this.product);
-	this.setUp();
-	this.setUpCanvas(this.product.pixW, this.product.pixH);
-	
-	if(this.product.pixW > this.product.pixH)				// landscape
-	{	
-		this.portrait = {'width':this.product.pixW, 'height': this.product.pixH };
-		this.landscape = {'width':this.product.pixH, 'height': this.product.pixW };
-	} 
-	else													// Portrait
-	{
-		this.portrait = {'width':this.product.pixH, 'height': this.product.pixW };
-		this.landscape = {'width':this.product.pixW, 'height': this.product.pixH };
-	};
-	this.cropRatio();
-	this.links();
-	this.scroller();
+	this.crop();							// This initialises canvas
 	this.showInfo();
+	this.scroller();
 	this.windowResize();
 	this.orientation();
 	this.export();
 };
-
 /*
 	Resolutions 
 	768 x 1024

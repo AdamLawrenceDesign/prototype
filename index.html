@@ -13,16 +13,12 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
     <script type="text/javascript" src="js/style.js"></script>
-	<script type="text/javascript" src="js/connectFB.js"></script>
+	<script type="text/javascript" src="js/facebook-login.js"></script>
 
     <style>
 		body
 		{
 			background-image:  url(img/landing/3.jpg)!important;
-		}
-		h1 
-		{
-			color:#fff
 		}
 	</style>
     
@@ -32,16 +28,14 @@
     
     <div class="absolute_max prm_lt">
          
-        <div id="container" class="_50_m relative round_sd align_lt p_l_bottom">
-                         
-            <div class="m_l_left m_l_right">
-                <h1>Login Required</h1>
-                <h2>Access Facebook Images<span class="icon-facebook2 fl_rt txt_fff" style="margin-top:.33em"></span></h2>
-            </div>
+        <div id="container" class="_33_m relative round_sd align_ct p_l_bottom bg_fff round-sd box-shadow" style="overflow:visible">
+             
+            <img src="svg/logo.svg" alt="logo" style="margin-top:-3em;height:7em;" />
             
-            <div class="underline_solid"></div>
+            <h3>Login Required</h3>
+            <h4>Use Facebook to Enter Site</h4>
             
-            <div class="m_l_left m_l_right">
+            <div class="m_l_left m_l_right m_l_top">
                 <fb:login-button scope="public_profile, email, user_photos" onlogin="checkLoginState();">
                 </fb:login-button>
                 <p>&nbsp;</p>

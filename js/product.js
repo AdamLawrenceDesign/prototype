@@ -166,7 +166,7 @@ FabricUI.prototype.assetsImages = function()
 							((mouseEndX-$('canvas').offset().left) - relativeMouseStart.left) + (width/2), 
 							((mouseEndY-$('canvas').offset().top) - relativeMouseStart.top) + (height/2)
 						);
-				classes.controls.initKeyboard();
+				// classes.controls.initKeyboard();
 			}
 			
 		},

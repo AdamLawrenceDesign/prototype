@@ -7,14 +7,11 @@ $(function()
 	itemName = url.substring(url.lastIndexOf("?")+1,url.lastIndexOf("=")).replace(/%20/g,' ');
 	
 	canvas = new fabric.Canvas('myCanvas',
-		{
-			backgroundColor:'#fff',
-			selection: false,
-		});
+	{
+		backgroundColor:'#fff',
+		selection: false,
+	});
 	
-	canvas.setWidth(0);
-	canvas.setHeight(0);
-
 	$.ajax(
 	{
 		url: 'http://192.168.0.177/AdvAPI/api/WCAPValues/Photocreate/' + itemName + '/' + id,
@@ -29,6 +26,8 @@ $(function()
 					var samplePage = new Page(value);
 				}
 			);
+			
+			
 		}
 	});
 	

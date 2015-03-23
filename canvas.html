@@ -16,6 +16,7 @@
     <script type="text/javascript" src="js/slimScroll.js"></script>
     <script type="text/javascript" src="js/fabric.js"></script>
     <script type="text/javascript" src='js/masonry.pkgd.min.js'></script>
+	<script type="text/javascript" src="js/facebook-info.js"></script>
 	<script type="text/javascript" src="js/preLoader.js?v1.1"></script>
     <script type="text/javascript" src='js/page.js'></script>
     <script type="text/javascript" src="js/palette.js"></script>
@@ -26,15 +27,15 @@
 
 <body>
 
-    <header class="prm box-shadow ease_sd p_m p_l_right" style="font-size:1.1em">
+    <header class="prm box-shadow ease_sd p_m p_l_right" style="font-size:1.1em;background:#00578a">
         <img id="header_logo" class="fl_lt m_m_left" src="svg/logo.svg?v1.1" alt="" />
         <span class="fl_lt txt_fff m_l_left m_m_top" >
             <a href="#" class="txt_sm productsLink">Products</a> > 
             <a href="#" class="txt_sm productLabel"></a> 
         </span>
-        <!--
+        
         <button id="export" class="fl_rt button round-sd m_s_top">ADD TO CART<span class="icon-cart m_l_left txt_fff"></span></button>
-        -->
+        
         <div class="clearfix"></div>
     </header>	
     
@@ -70,11 +71,19 @@
         <div id="wrapAssets" class="clearfix"> <!-- scroll -->
 
             <div id="assetsShortcuts" class="clearfix align_lt">
+                <div class="bg_fa p_m round-sd">
+                <img src="" id="profileImage" class="fl_lt round-sd" alt="profile image" style="width:3em"/>
+                <br/>
+                <b><span id="name" class="txt_xs m_l_left m_l_top"></span></b>
+                <span id="mail" class="txt_xs m_l_left"></span>
+                </div>
+            
+            
                 <h4 class="m_l_top">Product Information</h4>
                 <div class="underline-solid"></div>
                 <div id="productInformation" class="clearfix">
                     <p>
-                    	<img class="fl_rt" src="" alt="" style="width:6em;"/> 
+                    	<img class="fl_rt productImage" src="" alt="" style="width:6em;"/> 
                         <span class="description"></span><br/>
                         <a href="#" class="txt_sm productsLink"><span class="itemName"></span></a><br/>
                         <span class="txt_red price"></span>
@@ -108,6 +117,8 @@
                         </a>
                         </li>
                     </ul>
+                   
+                   <div class="underline-solid m_l_top"></div>
                                   	
                     <!-- 
                     <p class="_50_m">
@@ -130,13 +141,12 @@
                     <img class="_50_m p_m_top" src="" alt="" />
                     <!-- <a href="#" class="txt_sm productsLink">< Back</a> -->
                 </div>
-                
-                <div class="underline-solid m_l_top m_l_bottom"></div>
-                
-                
+                <div class="align_ct">
+                    <button class="button inline_block open_next_xtr m_l_top round-sd txt_xs p_l_left p_l_right" style="cursor:pointer;width:auto;">UPLOAD IMAGE<span class="icon-camera2 m_l_left txt_fff"></span></button>
+                </div>
                 <div class="quickLinks">
                 
-                	<h4 class="align_ct">Scroll Down</h4>
+                	<h4 class="align_ct">Add Image/s</h4>
                     
                     <a href="#" class="clearfix" data-link="Images" style="margin-top:2em">
                         <span class="icon-arrow-down"></span>

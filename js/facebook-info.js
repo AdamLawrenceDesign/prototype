@@ -37,12 +37,12 @@ function statusChangeCallback(response)
 	if (response.status === 'connected')
 	{
 		// Logged into your app and Facebook.
-		authResponse.push({ 
+		authResponse = { 
 							'accessToken' : response.authResponse.accessToken, 
 							'expiresIn' : response.authResponse.expiresIn,
 							'signedRequest' : response.authResponse.signedRequest,
 							'userID' : response.authResponse.userID
-						});
+						};
 		initAPI(authResponse);
 	} 
 	
@@ -120,11 +120,10 @@ function initAPI(authResponse)
 	{
 		// console.log('Successful login for: ' + response.name);
 		// document.getElementById('status').innerHTML = 'Thanks for logging in, ' + response.name + '!';
-		// getUserInfo();
-		// getUserProfileImage();
-		getAlbums(authResponse[0].userID);
-		console.log('catch');
-		// window.location.assign('http://192.168.0.174/_testing/prototype/products.html');
+		getUserInfo();
+		getUserProfileImage();
+		// getAlbums(authResponse[0].userID);
+		console.log(authResponse);
 	});
 }
 
