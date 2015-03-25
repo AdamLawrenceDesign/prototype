@@ -87,28 +87,6 @@ ul#listSize
 	};
 }
 
-ul#listThemes
-{
-	padding-left:.25em;
-	li
-	{
-		width:50%;
-		padding-bottom:.25em;
-		padding-right:.25em;
-	};
-	li img 
-	{
-		width:100%;
-		@extend .ease-sd;
-	};
-	li:hover
-	{
-		img
-		{
-			@extend .box-shadow;
-		};
-	};
-}
 /*
 ul#listImages
 {
@@ -138,7 +116,13 @@ ul#listImages
 	};
 }
 */
-ul#listImages, ul#listTextThemes 
+
+#listImages li, #listImages li a, #listThemes li, #listThemes li a 
+{
+	height:auto
+}
+
+ul#listImages, ul#listTextThemes, ul#listThemes 
 {
 	text-align:justify;
 	li

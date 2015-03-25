@@ -6,7 +6,7 @@
 	
 *************************************************/
 
-var authResponse = [];
+var authResponse;
 
 window.fbAsyncInit = function()
 {
@@ -95,7 +95,7 @@ window.fbAsyncInit = function()
 
   FB.getLoginStatus(function(response)
   {
-	statusChangeCallback(response);
+	 statusChangeCallback(response);
   });
   
 };
@@ -133,6 +133,8 @@ function getUserInfo()
 	{
 		$('#name').html(response.name);
 		$('#mail').html(response.email);
+		$('#userName').val(response.name);
+		$('#userEmail').val(response.email);
 	});
 }
 

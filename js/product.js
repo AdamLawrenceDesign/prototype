@@ -28,11 +28,12 @@ function parseWidth(el, height, width, callback)
 	};
 };
 
-function FabricUI(client, subject, product)
+function FabricUI(client, subject, product, themes)
 {
 	this.client = client;
 	this.subject = subject;
 	this.product = product;
+	this.themes = themes;
 	this.init();
 }; 
 
@@ -49,7 +50,7 @@ FabricUI.prototype.userInput = function(inputType, wrap, el, callback)
 
 FabricUI.prototype.assetsSizes = function()
 {
-	listCreateImg('listSize',this.product.OtherProducts, function()
+	listCreateImg('listSize', this.product.OtherProducts, function()
 	{
 		return;
 	});
@@ -66,45 +67,28 @@ FabricUI.prototype.assetsSizes = function()
 			canvas.renderAll();
 		});
 	};
-	/*
-	this.userInput('click', '#listSize', 'a', function()
-	{
-		var lookUp = $(el).attr('data-lookUp');
-		$('#wrapCanvas').fadeOut(400, function()
-		{
-			resizeCanvas(lookUp);
-			$('#wrapCanvas').fadeIn(400);
-		})
-	});
-	
-	$('#listSize').on('click','a', function(event)
-	{
-		event.preventDefault();
-		var lookUp = $(this).attr('data-lookUp');
-		$('#wrapCanvas').fadeOut(400, function()
-		{
-			resizeCanvas(lookUp);
-			$('#wrapCanvas').fadeIn(400);
-		})
-		
-	});
-	*/
 };
 
 FabricUI.prototype.assetsThemes = function()
 {
-	var $this;
+	var $this, string;
 	$this = this;
 	
-	listCreateImg('listThemes', this.product.Themes, function(){
-		return;
-	});
-	$('#listThemes').on('click','a', function(event)
+	if(this.themes == '')
 	{
-		event.preventDefault();
-		var lookUp = $(this).attr('data-lookUp');
-		canvas.loadFromJSON($this.product.Themes[lookUp].JSON);
+		$('.themesObj, #assetsThemes').css('display','none');
+		return;
+	}
+	
+	listCreateImg('listThemes', this.themes.Themes, function()
+	{
+		$('#listThemes').addClass('grid');
+		setTimeout(function()
+		{
+			listGrid('#listImages');			// Set Masonary 
+		}, 600);
 	});
+	
 };
 
 FabricUI.prototype.assetsImages = function()
@@ -308,7 +292,7 @@ FabricUI.prototype.init = function()
 {
 	// preloadPost(this.subject.Images);
 	this.assetsSizes();
-	// this.assetsThemes();
+	this.assetsThemes();
 	this.assetsImages();
 	this.assetsText();
 	return;

@@ -8,19 +8,6 @@
 
 var canvas, placeholder;
 			
-placeholder = new fabric.Rect(
-			{
-				left: 0,
-				top: 0,
-				fill:'#000',
-				lockMovementX: true,
-				lockMovementY: true,
-				lockScalingX: true,
-				lockScalingY: true,
-				selectable: false,
-				opacity:0,
-			});
-
 function listCreateImg(wrap, subClass, callback)
 {
 	for(var i = 0; i < subClass.length; i++)
@@ -43,7 +30,7 @@ function listCreateImg(wrap, subClass, callback)
 
 /******************************/
 
-function Page(product)
+function Page(product,themes)
 {
 	this.product = product;
 	this.portrait = '';
@@ -51,6 +38,7 @@ function Page(product)
 	this.current = '';
 	this.cropMarks = false;
 	this.cropRatio = false;
+	this.themes = themes;
 	this.init();
 }; 
 
@@ -60,9 +48,7 @@ Page.prototype.setUp = function()
 	$('#wrapAssets').css('height', window.innerHeight - ($('header').height()+($('#wrapSearch').height()*3)) + 'px');
 	$('main').css('height', window.innerHeight - ($('header').height()+($('#wrapSearch').height()*2)) + 'px');
 	$('#assetsShortcuts, #assetsThemes, #assetsImages, #assetsText').css('min-height', window.innerHeight - ($('header').height()+($('#wrapSearch').height()*3)) + 'px')
-	// $('main').css('margin-top',$('header').height() + 'px');
 	$('body, main').css('overflow','hidden');
-	
 	this.downArrows();
 };
 
@@ -75,16 +61,6 @@ Page.prototype.userInput = function(inputType, wrap, el, callback)
 		var el = this;
 		callback(classes, el, event);
 	});
-};
-
-Page.prototype.export = function()
-{
-	this.userInput('click', 'header', '#export', function(classes, el, event)
-	{
-		var string;
-		string = JSON.stringify(canvas);
-		console.log(string);
-	});	
 };
 
 Page.prototype.setUpCanvas = function(width, height)
@@ -123,7 +99,6 @@ Page.prototype.setWidthHeight = function(width,height)
 			$('#cropMark').css({'height': height*$this.cropRatio.width +'px','width': width*$this.cropRatio.width + 'px','display':'block'});
 		},400);
 	}
-	
 };
 
 Page.prototype.setOrientation = function(maxWidth, maxHeight, width, height, callback)
@@ -404,21 +379,21 @@ Page.prototype.showInfo = function()
 	wrap.find('.productImage').attr('src','img/products/' + $this.product.id + '.jpg');
 };
 
+Page.prototype.resetPage = function()
+{
+	canvas.setWidth(0);
+	canvas.setHeight(0);
+	$('#cropMark').css('display','none');
+};
+
 Page.prototype.orientation = function()
 {
 	var $this;
 	$this = this;
-	
-	function resetPage()
-	{
-		canvas.setWidth(0);
-		canvas.setHeight(0);
-		$('#cropMark').css('display','none');
-	};
-	
+
 	$('#orientationLinks').on('click','a', function()
 	{
-		resetPage();
+		$this.resetPage();
 
 		switch ($(this).attr('id'))
 		{
@@ -434,7 +409,7 @@ Page.prototype.orientation = function()
 	
 	$('#zoom').on('click', '#rotate', function()
 	{
-		resetPage();
+		$this.resetPage();
 		
 		switch ($this.current)
 		{
@@ -488,6 +463,99 @@ Page.prototype.crop = function()
 	this.links();
 };
 
+Page.prototype.addTheme = function()
+{
+	var $this, string;
+	$this = this;
+	
+	$('#listThemes').on('click', 'a', function(event)
+	{
+		event.preventDefault();
+		string = $this.themes.Themes[$(this).attr('data-lookUp')].JSON;
+		$this.themeParseString(eval(string.replace('{"objects":','').replace(',"background":"#fff"}','')));
+	});
+};
+
+Page.prototype.themeParseString = function(string)
+{
+	var $this;
+	$this = this;
+	
+	if(string[0].width > string[0].height || this.current == 'landscape')				// landscape
+	{	
+		console.log('landscape');
+		this.resetPage();
+		this.setUpCanvas(this.landscape.width, this.landscape.height);
+		setTimeout(function()
+		{
+			$this.buildTheme(string);
+		},400);
+		return;
+	}; 
+	
+	if(string[0].height > string[0].width || this.current == 'portrait') 				// Portrait
+	{
+		console.log('Portrait');
+		this.resetPage();
+		this.setUpCanvas(this.landscape.width, this.landscape.height);
+		setTimeout(function()
+		{
+			$this.buildTheme(string);
+		},400);
+		return;
+	}
+	
+};
+
+Page.prototype.buildTheme = function(string)
+{
+	var $this, ratio, insert;
+	
+	$this = this;
+	ratio = canvas._objects[0].width/string[0].width;
+	
+	console.log('Current Canvas: ' + canvas._objects[0].width + ', Current Canvas Height: ' + canvas._objects[0].height);
+
+	for(var i = 0; i < string.length; i++)
+	{
+		string[i].width = string[i].width*ratio;
+		string[i].height = string[i].height*ratio;
+		string[i].left = string[i].left*ratio;
+		string[i].top = string[i].top*ratio;
+
+		switch(string[i].type)
+		{
+			case 'i-text':
+				string[i].fontSize = string[i].fontSize*ratio;
+				break;
+			case 'circle':
+				string[i].radius = string[i].radius*ratio;
+				break;
+		};
+		string[0].selectable = false;
+	};
+	
+	insert = '{"objects":' + JSON.stringify(string) + ',"background":"#fff"}';
+	canvas.loadFromJSON(insert);
+	canvas.renderAll();
+};
+
+Page.prototype.export = function()
+{
+	this.userInput('click', 'header', '#export', function(classes, el, event)
+	{
+		var string, url, groupName;
+		
+		url = window.location.href;
+		groupName = url.substr(url.search("html?") + 5, url.length);
+		string = JSON.stringify(canvas);
+		console.log(string);
+		
+		window.location = 'http://192.168.0.177/_testing/prototype/payment.html';
+		
+	});	
+};
+
 Page.prototype.init = function()
 {
 	this.crop();							// This initialises canvas
@@ -495,6 +563,7 @@ Page.prototype.init = function()
 	this.scroller();
 	this.windowResize();
 	this.orientation();
+	this.addTheme();
 	this.export();
 };
 /*

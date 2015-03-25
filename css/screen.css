@@ -267,7 +267,7 @@ img.border {
   border: 1px solid #ecedf0; }
 
 /* ======== Style Patterns ======== */
-.box-shadow, #to_top, menu, #palette, #palette li ul, ul.assetList li:hover img, ul#listSize li:hover img, ul#listThemes li:hover img, ul#listImages li:hover img, ul#listTextThemes li:hover img {
+.box-shadow, #to_top, menu, #palette, #palette li ul, ul.assetList li:hover img, ul#listSize li:hover img, ul#listImages li:hover img, ul#listTextThemes li:hover img, ul#listThemes li:hover img {
   /* ==== shadow remove later ==== */
   -webkit-box-shadow: 0px 0px 6px 0px rgba(50, 50, 50, 0.75);
   -moz-box-shadow: 0px 0px 6px 0px rgba(50, 50, 50, 0.75);
@@ -818,9 +818,6 @@ div[id^="assets"] {
 
 .slimScrollBar {
   cursor: pointer; }
-
-#listImages li, #listImages li a {
-  height: auto; }
 
 .canvas-container {
   background: #fff;
@@ -2043,7 +2040,7 @@ section {
 .icon-uniE688:before {
   content: "\e688"; }
 
-.ease-sd, #to_top, .add_wrapper, .add_wrapper .add, #palette, #palette li ul, .quickLinks a span, .button_lt, .button_dk, .button_sd, .button, ul.assetList img, ul#listSize img, ul#listThemes li img, ul#listImages li img, ul#listTextThemes li img {
+.ease-sd, #to_top, .add_wrapper, .add_wrapper .add, #palette, #palette li ul, .quickLinks a span, .button_lt, .button_dk, .button_sd, .button, ul.assetList img, ul#listSize img, ul#listImages li img, ul#listTextThemes li img, ul#listThemes li img {
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
@@ -2322,15 +2319,6 @@ ul#listSize {
   ul#listSize li {
     padding: .25em .5em .5em .5em; }
 
-ul#listThemes {
-  padding-left: .25em; }
-  ul#listThemes li {
-    width: 50%;
-    padding-bottom: .25em;
-    padding-right: .25em; }
-  ul#listThemes li img {
-    width: 100%; }
-
 /*
 ul#listImages
 {
@@ -2360,12 +2348,15 @@ ul#listImages
 	};
 }
 */
-ul#listImages, ul#listTextThemes {
+#listImages li, #listImages li a, #listThemes li, #listThemes li a {
+  height: auto; }
+
+ul#listImages, ul#listTextThemes, ul#listThemes {
   text-align: justify; }
-  ul#listImages li, ul#listTextThemes li {
+  ul#listImages li, ul#listTextThemes li, ul#listThemes li {
     width: 48%;
     padding: 1%; }
-  ul#listImages li img, ul#listTextThemes li img {
+  ul#listImages li img, ul#listTextThemes li img, ul#listThemes li img {
     width: 100%;
     height: auto; }
 

@@ -40,12 +40,16 @@
              <div class="_60_m p_l_top txt_sm">    
                                                                                                        
                 <label class="_50_m p_m_top p_m_bottom m_m_top">Your Name: <span class="txt_red">*</span></label>
-                <span class="_50_m input_area m_m_top"><input type="text" id="name" /></span>
+                <span class="_50_m input_area m_m_top"><input type="text" id="userName" /></span>
                   
                 <div class="clearfix"></div>  
                                                                                                    
                 <label class="_50_m p_m_top p_m_bottom m_m_top">Email Address: <span class="txt_red">*</span></label>
-                <span class="_50_m input_area m_m_top"><input type="text" id="email" /></span>
+                <span class="_50_m input_area m_m_top"><input type="text" id="userEmail" /></span>
+                
+                <div class="clearfix"></div>
+                
+                <div class="underline-solid m_l_top"></div>
                 
                 <div class="clearfix"></div>
                 
@@ -148,10 +152,12 @@
                         <label class="icon-arrow_full_down border_box"></label>
                    </span> 
                </div>
+               
+               <div class="clearfix"></div>
                  
                <div class="underline-solid m_l_top m_l_bottom"></div> 
                
-                
+               <button id="export" class="fl_rt button m_m_top _50_m fl_rt">PAY<span class="icon-cart m_l_left txt_fff"></span></button>
                 
         	</div>
         </section>
@@ -163,8 +169,6 @@
 $(function()
 {
 	$('main').css('margin-top', $('header').height() + 'px');
-	
-		
 });
 
 </script>
