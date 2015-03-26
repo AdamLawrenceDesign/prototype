@@ -7,31 +7,12 @@
 *************************************************/
 
 var canvas, placeholder;
-			
-function listCreateImg(wrap, subClass, callback)
-{
-	for(var i = 0; i < subClass.length; i++)
-	{
-		var obj = document.getElementById(wrap),
-			li = document.createElement('li'),
-			a = document.createElement('a'),
-			img = document.createElement('img');
-			
-		$(li).append(a);
-		$(a).append(img);
-		$(obj).append(li);
-
-		$(img).attr({'src': subClass[i].Path, 'alt': subClass[i].Name });
-		$(a).attr({'data-id': subClass[i].ID, 'data-lookUp' : i});
-	}
-	
-	callback();
-};
 
 /******************************/
 
 function Page(product,themes)
 {
+	var _this = this;
 	this.product = product;
 	this.portrait = '';
 	this.landscape = '';
@@ -40,7 +21,7 @@ function Page(product,themes)
 	this.cropRatio = false;
 	this.themes = themes;
 	this.init();
-}; 
+}
 
 Page.prototype.setUp = function()
 {
@@ -52,27 +33,16 @@ Page.prototype.setUp = function()
 	this.downArrows();
 };
 
-Page.prototype.userInput = function(inputType, wrap, el, callback)
-{
-	var classes = this;
-	$(wrap).on(inputType, el, function(event)
-	{	
-		event.preventDefault();
-		var el = this;
-		callback(classes, el, event);
-	});
-};
-
 Page.prototype.setUpCanvas = function(width, height)
 {
-	var $this = this;
+	var _this = this;
 	
 	this.setOrientation($('main').innerWidth()*.6, $('main').innerHeight()*.65, width, height, function(width,height)
 	{
 		canvas.clear();							// incase change during build
 		setTimeout(function()
 		{
-			$this.setWidthHeight(width, height);
+			_this.setWidthHeight(width, height);
 			canvas.add(placeholder);
 			canvas.renderAll();
 		},400 );
@@ -82,8 +52,8 @@ Page.prototype.setUpCanvas = function(width, height)
 
 Page.prototype.setWidthHeight = function(width,height)
 {
-	var $this;
-	$this = this;
+	var _this;
+	_this = this;
 	
 	$('canvas, .canvas-container').addClass('canvas-transitions');
 	
@@ -96,7 +66,7 @@ Page.prototype.setWidthHeight = function(width,height)
 	{
 		setTimeout(function()
 		{
-			$('#cropMark').css({'height': height*$this.cropRatio.width +'px','width': width*$this.cropRatio.width + 'px','display':'block'});
+			$('#cropMark').css({'height': height*_this.cropRatio.width +'px','width': width*_this.cropRatio.width + 'px','display':'block'});
 		},400);
 	}
 };
@@ -131,8 +101,7 @@ Page.prototype.setOrientation = function(maxWidth, maxHeight, width, height, cal
 
 Page.prototype.canvasResize = function()
 {
-	var $this, string, width, height, insert, cropWidth, cropHeight, cropDisplay, wrapCrop;
-	$this = this;
+	var string, width, height, insert, cropWidth, cropHeight, cropDisplay, wrapCrop;
 	wrapCrop = $('#cropMark');
 	
 	function changeSize(string, ratio, callback)
@@ -179,15 +148,15 @@ Page.prototype.canvasResize = function()
 		wrapCrop.css({'width':wrapCrop.outerWidth()*ratio+'px','height':wrapCrop.outerHeight()*ratio + 'px'}).fadeIn();
 	};
 	
-	this.userInput('click', '#zoom', '#canvasLarger', function(classes, el, event)
+	$('#zoom').on('click', '#canvasLarger', function()
 	{
 		changeSize(eval(JSON.stringify(canvas).replace('{"objects":','').replace(',"background":"#fff"}','')),1.09, function(ratio)
 		{
 			cropDisplay(wrapCrop,ratio);
 		});
 	});
-		
-	this.userInput('click', '#zoom', '#canvasSmaller', function(classes, el, event)
+	
+	$('#zoom').on('click', '#canvasSmaller', function()
 	{
 		if($('canvas').height()<150)return;
 		if($('canvas').width()<150)return;
@@ -195,15 +164,15 @@ Page.prototype.canvasResize = function()
 		{
 			cropDisplay(wrapCrop,ratio);
 		});
-	});	
+	});
 	
 };
 
 Page.prototype.windowResize = function()
 {
-	var rtime, timeout, delta, page, $this;
+	var rtime, timeout, delta, page, _this;
 	
-	$this = this;
+	_this = this;
 	rtime = new Date(1, 1, 2000, 12,00,00);
 	timeout = false;
 	delta = 200;
@@ -231,16 +200,16 @@ Page.prototype.windowResize = function()
 		{
 			timeout = false;
 			
-			$this.setUp();
+			_this.setUp();
 			
-			switch ($this.current)
+			switch (_this.current)
 			{
 				case 'landscape':
-					$this.setUpCanvas($this.portrait.width, $this.portrait.height);
+					_this.setUpCanvas(_this.portrait.width, _this.portrait.height);
 				break;
 				
 				case 'portrait':
-					$this.setUpCanvas($this.landscape.width, $this.landscape.height);
+					_this.setUpCanvas(_this.landscape.width, _this.landscape.height);
 				break;
 			}
 			
@@ -305,22 +274,22 @@ Page.prototype.scroller = function()
 		});
 	};
 	
-	this.userInput('click', '#tabs', 'a', function(classes, el, event)
+	$('#tabs').on('click', 'a', function()
 	{
-		manageScroll(el);
-		makeSelected($(el).parent('li'), '#tabs li', 'selected');
+		manageScroll(this);
+		makeSelected($(this).parent('li'), '#tabs li', 'selected');
 	});
 	
-	this.userInput('click', '#shortcutTabs', 'a', function(classes, el, event)
+	$('#shortcutTabs').on('click', 'a', function()
 	{
-		manageScroll(el);
+		manageScroll(this);
 	});
 	
-	this.userInput('click', '.quickLinks', 'a', function(classes, el, event)
+	$('.quickLinks').on('click', 'a', function()
 	{
-		manageScroll(el);
+		manageScroll(this)
 	});
-	
+
 	wrap.slimscroll();
 	
 };
@@ -356,27 +325,27 @@ Page.prototype.downArrows = function()
 
 Page.prototype.links = function()
 {
-	var $this;
-	$this = this;
+	var _this;
+	_this = this;
 	
-	$('.productLabel').html($this.product.description);
+	$('.productLabel').html(_this.product.description);
 	
 	$('.productsLink').on('click', function()
 	{
-		$(this).attr('href', 'products.html?' + $this.product.itemName);
+		$(this).attr('href', 'products.html?' + _this.product.itemName);
 	});
 };
 
 Page.prototype.showInfo = function()
 {
-	var $this, wrap;
-	$this = this;
+	var _this, wrap;
+	_this = this;
 	wrap = $('#productInformation');
 	
-	wrap.find('.description').html($this.product.description);
-	wrap.find('.itemName').html($this.product.itemName);
-	wrap.find('.price').html('$ ' + $this.product.unitPrice);
-	wrap.find('.productImage').attr('src','img/products/' + $this.product.id + '.jpg');
+	wrap.find('.description').html(_this.product.description);
+	wrap.find('.itemName').html(_this.product.itemName);
+	wrap.find('.price').html('$ ' + _this.product.unitPrice);
+	wrap.find('.productImage').attr('src','img/products/' + _this.product.id + '.jpg');
 };
 
 Page.prototype.resetPage = function()
@@ -388,37 +357,37 @@ Page.prototype.resetPage = function()
 
 Page.prototype.orientation = function()
 {
-	var $this;
-	$this = this;
+	var _this;
+	_this = this;
 
 	$('#orientationLinks').on('click','a', function()
 	{
-		$this.resetPage();
+		_this.resetPage();
 
 		switch ($(this).attr('id'))
 		{
 			case 'landscape':
-				$this.setUpCanvas($this.portrait.width, $this.portrait.height);
+				_this.setUpCanvas(_this.portrait.width, _this.portrait.height);
 			break;
 			
 			case 'portrait':
-				$this.setUpCanvas($this.landscape.width, $this.landscape.height);
+				_this.setUpCanvas(_this.landscape.width, _this.landscape.height);
 			break;
 		}
 	});
 	
 	$('#zoom').on('click', '#rotate', function()
 	{
-		$this.resetPage();
+		_this.resetPage();
 		
-		switch ($this.current)
+		switch (_this.current)
 		{
 			case 'landscape':
-				$this.setUpCanvas($this.landscape.width, $this.landscape.height);
+				_this.setUpCanvas(_this.landscape.width, _this.landscape.height);
 			break;
 			
 			case 'portrait':
-				$this.setUpCanvas($this.portrait.width, $this.portrait.height);
+				_this.setUpCanvas(_this.portrait.width, _this.portrait.height);
 			break;
 		}
 	});
@@ -465,21 +434,21 @@ Page.prototype.crop = function()
 
 Page.prototype.addTheme = function()
 {
-	var $this, string;
-	$this = this;
+	var _this, string;
+	_this = this;
 	
 	$('#listThemes').on('click', 'a', function(event)
 	{
 		event.preventDefault();
-		string = $this.themes.Themes[$(this).attr('data-lookUp')].JSON;
-		$this.themeParseString(eval(string.replace('{"objects":','').replace(',"background":"#fff"}','')));
+		string = _this.themes.Themes[$(this).attr('data-lookUp')].JSON;
+		_this.themeParseString(eval(string.replace('{"objects":','').replace(',"background":"#fff"}','')));
 	});
 };
 
 Page.prototype.themeParseString = function(string)
 {
-	var $this;
-	$this = this;
+	var _this;
+	_this = this;
 	
 	if(string[0].width > string[0].height || this.current == 'landscape')				// landscape
 	{	
@@ -488,7 +457,7 @@ Page.prototype.themeParseString = function(string)
 		this.setUpCanvas(this.landscape.width, this.landscape.height);
 		setTimeout(function()
 		{
-			$this.buildTheme(string);
+			_this.buildTheme(string);
 		},400);
 		return;
 	}; 
@@ -500,7 +469,7 @@ Page.prototype.themeParseString = function(string)
 		this.setUpCanvas(this.landscape.width, this.landscape.height);
 		setTimeout(function()
 		{
-			$this.buildTheme(string);
+			_this.buildTheme(string);
 		},400);
 		return;
 	}
@@ -509,9 +478,9 @@ Page.prototype.themeParseString = function(string)
 
 Page.prototype.buildTheme = function(string)
 {
-	var $this, ratio, insert;
+	var _this, ratio, insert;
 	
-	$this = this;
+	_this = this;
 	ratio = canvas._objects[0].width/string[0].width;
 	
 	console.log('Current Canvas: ' + canvas._objects[0].width + ', Current Canvas Height: ' + canvas._objects[0].height);
@@ -542,18 +511,17 @@ Page.prototype.buildTheme = function(string)
 
 Page.prototype.export = function()
 {
-	this.userInput('click', 'header', '#export', function(classes, el, event)
+	$('header').on('click', '#export', function()
 	{
 		var string, url, groupName;
 		
-		url = window.location.href;
-		groupName = url.substr(url.search("html?") + 5, url.length);
+		// url = window.location.href;
+		// groupName = url.substr(url.search("html?") + 5, url.length);
 		string = JSON.stringify(canvas);
 		console.log(string);
 		
-		window.location = 'http://192.168.0.177/_testing/prototype/payment.html';
-		
-	});	
+		// window.location = 'http://192.168.0.177/_testing/prototype/payment.html';
+	});
 };
 
 Page.prototype.init = function()
@@ -566,12 +534,3 @@ Page.prototype.init = function()
 	this.addTheme();
 	this.export();
 };
-/*
-	Resolutions 
-	768 x 1024
-	1366 x 768
-	1920 x 1080
-	1280 x 800
-	1440 x 900
-	320 x 568
-*/

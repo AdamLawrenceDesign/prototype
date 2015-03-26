@@ -10,11 +10,11 @@ function PreLoadImages(value)
 {
 	this.value = value;
 	this.init();
-};
+}
 
 PreLoadImages.prototype.init = function()
 {
-	var images, value
+	var images, value;
 	
 	images = [];
 	value = this.value;

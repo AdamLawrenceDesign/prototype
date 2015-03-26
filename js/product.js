@@ -30,12 +30,13 @@ function parseWidth(el, height, width, callback)
 
 function FabricUI(client, subject, product, themes)
 {
+	var _this = this;
 	this.client = client;
 	this.subject = subject;
 	this.product = product;
 	this.themes = themes;
 	this.init();
-}; 
+}
 
 FabricUI.prototype.userInput = function(inputType, wrap, el, callback)
 {
@@ -48,47 +49,18 @@ FabricUI.prototype.userInput = function(inputType, wrap, el, callback)
 	});
 };
 
-FabricUI.prototype.assetsSizes = function()
-{
-	listCreateImg('listSize', this.product.OtherProducts, function()
-	{
-		return;
-	});
-	
-	function resizeCanvas(lookUp)
-	{
-		var  width, height;
-		width = sampleUI.product.OtherProducts[lookUp].width;
-		height = sampleUI.product.OtherProducts[lookUp].height;
-		
-		parseWidth('#wrapCanvas', height, width, function(width,height)
-		{
-			setWidthHeight(width,height);
-			canvas.renderAll();
-		});
-	};
-};
-
 FabricUI.prototype.assetsThemes = function()
 {
-	var $this, string;
-	$this = this;
+	var _this, string;
+	_this = this;
 	
 	if(this.themes == '')
 	{
 		$('.themesObj, #assetsThemes').css('display','none');
 		return;
 	}
-	
-	listCreateImg('listThemes', this.themes.Themes, function()
-	{
-		$('#listThemes').addClass('grid');
-		setTimeout(function()
-		{
-			listGrid('#listImages');			// Set Masonary 
-		}, 600);
-	});
-	
+
+	var showThemes = new ListBuilder('listThemes', this.themes.Themes, true)
 };
 
 FabricUI.prototype.assetsImages = function()
@@ -96,16 +68,9 @@ FabricUI.prototype.assetsImages = function()
 	var	mouseEndX, mouseEndY, width, height, elementOffset, helper, offsetY, offsetX, classes, pageX, pageY;
 	pageX = window.pageXOffset;
 	pageY = window.pageYOffset;
-	classes = this;
+	_this = this;
 	
-	listCreateImg('listImages', this.subject.Images, function()
-	{
-		$('#listImages li').addClass('grid');
-		setTimeout(function()
-		{
-			listGrid('#listImages');			// Set Masonary 
-		}, 600);
-	});
+	var addImages = new ListBuilder('listImages', this.subject.Images, true);
 	
 	var drag = $('#listImages a img').draggable(
 	{
@@ -144,13 +109,13 @@ FabricUI.prototype.assetsImages = function()
 			   )
 			{
 				addImage(
-							classes.subject.Images[lookUp].HighRes, 
+							_this.subject.Images[lookUp].HighRes, 
 							width, 
 							height, 
 							((mouseEndX-$('canvas').offset().left) - relativeMouseStart.left) + (width/2), 
 							((mouseEndY-$('canvas').offset().top) - relativeMouseStart.top) + (height/2)
 						);
-				// classes.controls.initKeyboard();
+				// _this.controls.initKeyboard();
 			}
 			
 		},
@@ -159,15 +124,16 @@ FabricUI.prototype.assetsImages = function()
 		scroll: false,
 	});
 	
-	this.userInput('click', '#listImages', 'a', function(classes, el)
+	this.userInput('click', '#listImages', 'a', function(_this, el)
 	{
 		var width, height,lookUp;
+		
 		width = $(el).find('img').width();
 		height = $(el).find('img').height();
 		lookUp = $(el).attr('data-lookup');	
 		
 		addImage(
-					classes.subject.Images[lookUp].HighRes, 
+					_this.subject.Images[lookUp].HighRes, 
 					width, 
 					height, 
 					$('canvas').width()/2, 
@@ -178,9 +144,8 @@ FabricUI.prototype.assetsImages = function()
 
 FabricUI.prototype.assetsText = function()
 {
-	var $this, wrap, theme, sampleUI, themeLength, count;
+	var wrap, theme, sampleUI, themeLength, count;
 	
-	$this = this;
 	wrap = '#addText';
 	theme = this.product.TextThemes[0];
 	sampleUI = this;
@@ -189,40 +154,33 @@ FabricUI.prototype.assetsText = function()
 		
 	buildTextTheme(wrap,theme);
 	
-	listCreateImg('listTextThemes', this.product.TextObjects, function()
-	{
-		$('#listTextThemes li').addClass('grid');
-		setTimeout(function(){
-			listGrid('#listTextThemes');
-		},400);
-		return;
-	});
+	var showTextThemes = new ListBuilder('listTextThemes', this.product.TextObjects, true)
 
-	this.userInput('click','#assetsText','#changeTextTheme', function(classes)
-	{console.log('test');
+	$('#assetsText').on('click', '#changeTextTheme', function()
+	{
 		count = count+1;
 		if(count == themeLength)	
 		{ 
 			count = 0;
 		}
-		
-		theme = $this.product.TextThemes[count]; 
+		theme = _this.product.TextThemes[count]; 
 		buildTextTheme(wrap, theme);
 	});
 	
-	this.userInput('click', '#addText','li',function(classes, el)
+	$('#addText').on('click', 'li', function()
 	{
-		var lookUp = $(el).attr('data-lookup'),
-			value = theme[lookUp].text;
+		var lookUp, value;
+		lookUp = $(this).attr('data-lookup');
+		value = theme[lookUp].text;
 		addIText(value, theme, lookUp);
 	});
 	
-	this.userInput('click', '#listTextThemes','a', function(classes, el)
+	$('#listTextThemes').on('click','a', function()
 	{
-		var lookUp = $(el).attr('data-lookUp');
+		var lookUp = $(this).attr('data-lookUp');
 		sampleUI.preBuiltText(lookUp);				
 	});
-
+	
 };
 
 FabricUI.prototype.preBuiltText = function(lookUp)
@@ -291,7 +249,7 @@ FabricUI.prototype.preBuiltText = function(lookUp)
 FabricUI.prototype.init = function()
 {
 	// preloadPost(this.subject.Images);
-	this.assetsSizes();
+	// this.assetsSizes();
 	this.assetsThemes();
 	this.assetsImages();
 	this.assetsText();

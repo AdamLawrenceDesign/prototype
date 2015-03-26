@@ -92,10 +92,11 @@ function addIText(value, theme, lookUp)
 
 function Palette(activeObj, colours)
 {
+	var _this = this;
 	this.activeObj = activeObj;
 	this.colours = colours;
 	this.init();
-};
+}
 
 Palette.prototype.paletteCreateColours = function()
 {
@@ -122,56 +123,56 @@ Palette.prototype.paletteCreateColours = function()
 
 Palette.prototype.userInput = function(inputType, wrap, el, callback)
 {
-	var $this = this;
+	var _this = this;
 	$(wrap).on(inputType, el, function(event)
 	{	
 		event.preventDefault();
 		var el = this;
-		callback($this, el, event);
+		callback(_this, el, event);
 	});
 };
 
 Palette.prototype.manageEvents = function()
 {	
-	var $this,
-	$this = this;
+	var _this,
+	_this = this;
 	
 	$('#trash').on('click', function()
 	{
-		canvas.remove($this.activeObj);
-		$this.hideSubMenus();
+		canvas.remove(_this.activeObj);
+		_this.hideSubMenus();
 		canvas.renderAll();
 	});
 	
 	$('#grow').on('click', function()
 	{
-		if(!$this.activeObj) return;
-		$this.activeObj.height = $this.activeObj.height * 1.06;
-		$this.activeObj.width = $this.activeObj.width * 1.06;
+		if(!_this.activeObj) return;
+		_this.activeObj.height = _this.activeObj.height * 1.06;
+		_this.activeObj.width = _this.activeObj.width * 1.06;
 		canvas.renderAll();
 	});
 	
 	$('#shrink').on('click',function()
 	{
-		if(!$this.activeObj) return;
-		$this.activeObj.height = $this.activeObj.height * 0.94;
-		$this.activeObj.width = $this.activeObj.width * 0.94;
+		if(!_this.activeObj) return;
+		_this.activeObj.height = _this.activeObj.height * 0.94;
+		_this.activeObj.width = _this.activeObj.width * 0.94;
 		canvas.renderAll();
 	});
 	
 	$('#back').on('click', function()			/*========== Check export ============*/
 	{
-		canvas.sendBackwards($this.activeObj);
-		if($this.activeObj == canvas.item(0))
+		canvas.sendBackwards(_this.activeObj);
+		if(_this.activeObj == canvas.item(0))
 		{
-			canvas.bringForward($this.activeObj);
+			canvas.bringForward(_this.activeObj);
 		}
 	});
 	
 	$('#forward').on('click', function()
 	{
-		if(!$this.activeObj) return;
-		canvas.bringForward($this.activeObj);
+		if(!_this.activeObj) return;
+		canvas.bringForward(_this.activeObj);
 	});
 	
 	$('#palette li a').on('click', function()
@@ -183,8 +184,8 @@ Palette.prototype.manageEvents = function()
 	
 	$('#opacity').on('change', function()
 	{
-		if(!$this.activeObj) return;
-		$this.activeObj.opacity = $(this).val()*.01;
+		if(!_this.activeObj) return;
+		_this.activeObj.opacity = $(this).val()*.01;
 		canvas.renderAll();
 	});
 	
@@ -195,8 +196,8 @@ Palette.prototype.manageEvents = function()
 		filter = new fabric.Image.filters.Grayscale();
 		check = true;
 
-		$this.activeObj.filters.push(new fabric.Image.filters.Grayscale());
-		$this.activeObj.applyFilters(canvas.renderAll.bind(canvas));
+		_this.activeObj.filters.push(new fabric.Image.filters.Grayscale());
+		_this.activeObj.applyFilters(canvas.renderAll.bind(canvas));
 		canvas.renderAll();
 	});
 	
@@ -207,55 +208,55 @@ Palette.prototype.manageEvents = function()
 		filter = new fabric.Image.filters.Grayscale();
 		check = true;
 
-		$this.activeObj.filters = [];
-		$this.activeObj.applyFilters();
+		_this.activeObj.filters = [];
+		_this.activeObj.applyFilters();
 		canvas.renderAll();
 	});
 	
 	$('#colourContainer').on('click','li', function()
 	{
 		var colour = 'rgb' + $(this).attr('id');
-		$this.activeObj.fill = colour;
+		_this.activeObj.fill = colour;
 		canvas.renderAll();
 	});
 	
 	$('#alignLeft').on('click', function()
 	{
-		$this.activeObj.textAlign = 'left';
+		_this.activeObj.textAlign = 'left';
 		canvas.renderAll();
 	});
 	
 	$('#alignCenter').on('click', function()
 	{
-		$this.activeObj.textAlign = 'center';
+		_this.activeObj.textAlign = 'center';
 		canvas.renderAll();
 	});
 	
 	$('#alignRight').on('click', function()
 	{
-		$this.activeObj.textAlign = 'right';
+		_this.activeObj.textAlign = 'right';
 		canvas.renderAll();
 	});
 	
 	$('#fontSize').on('change', function()
 	{
-		if(!$this.activeObj) return;
-		var value = $this.activeObj.fontSize;
-		$this.activeObj.fontSize = $(this).val();
+		if(!_this.activeObj) return;
+		var value = _this.activeObj.fontSize;
+		_this.activeObj.fontSize = $(this).val();
 		canvas.renderAll();
 	});
 	
 	$('#lineHeight').on('change', function()
 	{
-		if(!$this.activeObj) return;
-		$this.activeObj.lineHeight = $(this).val();
+		if(!_this.activeObj) return;
+		_this.activeObj.lineHeight = $(this).val();
 		canvas.renderAll();
 	});
 	
 	$('#fontFamily').on('change',function()
 	{
-		if(!$this.activeObj) return;
-		$this.activeObj.fontFamily = $(this).val();
+		if(!_this.activeObj) return;
+		_this.activeObj.fontFamily = $(this).val();
 		canvas.renderAll();
 	});
 	
@@ -268,7 +269,7 @@ Palette.prototype.isRealValue = function(activeObj)
 
 Palette.prototype.addObj = function()
 {
-	var $this = this;
+	var _this = this;
 	
 	canvas.on('object:added', function(event)
 	{
@@ -276,21 +277,21 @@ Palette.prototype.addObj = function()
 		switch(activeObject.get('type'))
 		{
 			case 'image':
-				$this.paletteType('image');
-				$this.show();
-				$this.activeObj = activeObject;
+				_this.paletteType('image');
+				_this.show();
+				_this.activeObj = activeObject;
 				break;
 			case 'i-text':
-				$this.paletteType('i-text');
-				$this.show();
-				$this.activeObj = activeObject;
+				_this.paletteType('i-text');
+				_this.show();
+				_this.activeObj = activeObject;
 				break;
 			case 'Solid':
-				$this.paletteType('solid');
-				$this.activeObj = activeObject;
+				_this.paletteType('solid');
+				_this.activeObj = activeObject;
 			case '':
-				$this.hide();
-				$this.activeObj = false;
+				_this.hide();
+				_this.activeObj = false;
 				break;
 		};
 	});
@@ -308,47 +309,47 @@ Palette.prototype.hide = function()
 
 Palette.prototype.modified = function()
 {
-	var $this = this;
+	var _this = this;
 	
 	canvas.on('object:modified', function(event)
 	{
-		$this.activeObj = event.target;
+		_this.activeObj = event.target;
 	});
 	
 	canvas.on('object:removed' , function(event)
 	{
-		$this.activeObj = false;
-		$this.hide();
+		_this.activeObj = false;
+		_this.hide();
 	});
 	
 	canvas.on('canvas:cleared', function(event)
 	{
-		$this.activeObj = false;
-		$this.hide();
+		_this.activeObj = false;
+		_this.hide();
 	});
 	
 	canvas.on('selection:cleared', function(event)
 	{
-		$this.activeObj = false;
-		$this.hide();
+		_this.activeObj = false;
+		_this.hide();
 	});
 	
 	canvas.on('selection:created', function(event)
 	{
 		console.log('selection made');
-		$this.show();
+		_this.show();
 	});
 	
 	/*===== remove when I can get selection created to work ====*/
 
 	if(canvas.getActiveObject() == null)
 	{
-		$this.activeObj = false;
+		_this.activeObj = false;
 	}
 	else
 	{
-		$this.show();
-		$this.activeObj = canvas.getActiveObject();
+		_this.show();
+		_this.activeObj = canvas.getActiveObject();
 	}
 	
 };
@@ -405,11 +406,11 @@ Palette.prototype.paletteType = function(type)
 
 Palette.prototype.initKeyboard = function()
 {
-	var $this = this;
+	var _this = this;
 	
 	var zoomBy = function(x, y, z) 
 	{
-		var activeObject = $this.activeObj;
+		var activeObject = _this.activeObj;
 		if (activeObject)
 		{
 			activeObject.zoomBy(x, y, z, function(){canvas.renderAll()});
@@ -418,7 +419,7 @@ Palette.prototype.initKeyboard = function()
 	
 	var objManip = function(prop, value) 
 	{
-		var obj = $this.activeObj;
+		var obj = _this.activeObj;
 		if (!obj) { return true; }
 		
 		switch(prop)
@@ -486,7 +487,7 @@ Palette.prototype.initKeyboard = function()
 			case 46 :
 				 var activeObject = canvas.getActiveObject();
 				 canvas.remove(activeObject);
-				 $this.hideSubMenus();
+				 _this.hideSubMenus();
 				 return true;
 		}
 	};
@@ -494,7 +495,7 @@ Palette.prototype.initKeyboard = function()
 
 Palette.prototype.init = function()
 {
-	var $this = this;
+	var _this = this;
 	this.hide();
 	this.paletteCreateColours();
 	this.addObj();
@@ -503,7 +504,7 @@ Palette.prototype.init = function()
 	this.initKeyboard();
 	$('canvas').on('click', function()
 	{
-		$this.modified();
+		_this.modified();
 	});
 	
 	setTimeout(function()
