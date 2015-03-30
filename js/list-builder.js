@@ -8,7 +8,6 @@
 
 function ListBuilder(wrap, obj, mGrid, callback)
 {
-	var _this = this;
 	this.wrap = wrap;
 	this.obj = obj;
 	this.masonaryGrid = mGrid;

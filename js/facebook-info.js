@@ -123,7 +123,7 @@ function initAPI(authResponse)
 		getUserInfo();
 		getUserProfileImage();
 		// getAlbums(authResponse[0].userID);
-		console.log(authResponse);
+		// console.log(authResponse);
 	});
 }
 

@@ -253,5 +253,6 @@ FabricUI.prototype.init = function()
 	this.assetsThemes();
 	this.assetsImages();
 	this.assetsText();
-	return;
+	// var addScroll = new ScrollManager('#wrapAssets','#wrapAssets div');
+	var addScroll = new ScrollManager('wrapAssets','div');
 };

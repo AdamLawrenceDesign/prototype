@@ -17,7 +17,7 @@ $(function()
 	
 	$.ajax(
 	{
-		url: 'http://192.168.0.177/AdvAPI/api/WCAPValues/Photocreate/', 
+		url: 'http://192.168.0.190/AdvAPI/api/WCAPValues/Photocreate/', 
 		type: 'GET',
 		username: 'WebAPIPhotocreateUser',
 		password: '@dvw3b@piu$3r',
@@ -36,7 +36,7 @@ $(function()
 	
 	$.ajax(
 	{
-		url: 'http://192.168.0.177/AdvAPI/api/WCAPValues/Photocreate/DistinctItemName', 
+		url: 'http://192.168.0.190/AdvAPI/api/WCAPValues/Photocreate/DistinctItemName', 
 		type: 'GET',
 		username: 'WebAPIPhotocreateUser',
 		password: '@dvw3b@piu$3r',

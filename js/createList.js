@@ -26,7 +26,7 @@ CreateList.prototype.nextLevel = function()
 		
 		$.ajax(
 		{
-			url: 'http://192.168.0.177/AdvAPI/api/WCAPValues/Photocreate/' + $this.groupName,
+			url: 'http://192.168.0.190/AdvAPI/api/WCAPValues/Photocreate/' + $this.groupName,
 			type: 'GET',
 			username: 'WebAPIPhotocreateUser',
 			password: '@dvw3b@piu$3r',

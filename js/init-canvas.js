@@ -6,6 +6,10 @@ $(function()
 	id = url.substr(url.search("=") + 1, url.length);
 	itemName = url.substring(url.lastIndexOf("?")+1,url.lastIndexOf("=")).replace(/%20/g,' ');
 	
+	/*================*/								// Set Up Canvas 
+	
+	$('#wrapCanvas').css('opacity','0');
+	
 	canvas = new fabric.Canvas('myCanvas',
 	{
 		backgroundColor:'#fff',
@@ -25,9 +29,17 @@ $(function()
 		opacity:0,
 	});
 	
+	canvas.setWidth(1);
+	canvas.setHeight(1);
+	placeholder.setWidth(1);
+	placeholder.setHeight(1);
+	canvas.add(placeholder);
+	
+	/*================*/								// Make your server call
+	
 	$.ajax(
 	{
-		url: 'http://192.168.0.177/AdvAPI/api/WCAPValues/Photocreate/' + itemName + '/' + id,
+		url: 'http://192.168.0.190/AdvAPI/api/WCAPValues/Photocreate/' + itemName + '/' + id,
 		type: 'GET',
 		username: 'WebAPIPhotocreateUser',
 		password: '@dvw3b@piu$3r',
@@ -43,6 +55,7 @@ $(function()
 					
 					if(value.id == '41')
 					{
+						
 						themes = {Themes:
 									[
 										{'ID':'11189','Name':'Theme 1','ImageName':'theme1.jpg','Path':'img/themeIcons/themes/theme1.jpg','JSON':
@@ -61,8 +74,8 @@ $(function()
 						}
 					};
 					
-					var samplePage = new Page(value, themes);
-
+					var samplePage = new CanvasSetup(value, themes);
+					var startControllers = new StandardControllers(value);
 					var sampleUI = new FabricUI(
 													'client information', 
 													{Images:

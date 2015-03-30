@@ -17,8 +17,8 @@ function Page(product,themes)
 	this.portrait = '';
 	this.landscape = '';
 	this.current = '';
-	this.cropMarks = false;
-	this.cropRatio = false;
+	// this.cropMarks = false;
+	// this.cropRatio = false;
 	this.themes = themes;
 	this.init();
 }
@@ -26,11 +26,10 @@ function Page(product,themes)
 Page.prototype.setUp = function()
 {
 	$('aside').css('margin-top', $('header').height() + 'px');		// , main
-	$('#wrapAssets').css('height', window.innerHeight - ($('header').height()+($('#wrapSearch').height()*3)) + 'px');
-	$('main').css('height', window.innerHeight - ($('header').height()+($('#wrapSearch').height()*2)) + 'px');
-	$('#assetsShortcuts, #assetsThemes, #assetsImages, #assetsText').css('min-height', window.innerHeight - ($('header').height()+($('#wrapSearch').height()*3)) + 'px')
+	$('#wrapAssets').css('height', window.innerHeight - ($('header').height()+60) + 'px');	// removed $('#wrapSearch').height()*3)
+	$('main').css('height', window.innerHeight - ($('header').height()+40) + 'px');
+	// $('#assetsShortcuts, #assetsThemes, #assetsImages, #assetsText').css('min-height', window.innerHeight - ($('header').height()+($('#wrapSearch').height()*3)) + 'px')
 	$('body, main').css('overflow','hidden');
-	this.downArrows();
 };
 
 Page.prototype.setUpCanvas = function(width, height)
@@ -61,7 +60,7 @@ Page.prototype.setWidthHeight = function(width,height)
 	canvas.setHeight(height);
 	placeholder.setWidth(width);
 	placeholder.setHeight(height);
-	
+	/*
 	if(!this.cropMarks)
 	{
 		setTimeout(function()
@@ -69,6 +68,7 @@ Page.prototype.setWidthHeight = function(width,height)
 			$('#cropMark').css({'height': height*_this.cropRatio.width +'px','width': width*_this.cropRatio.width + 'px','display':'block'});
 		},400);
 	}
+	*/
 };
 
 Page.prototype.setOrientation = function(maxWidth, maxHeight, width, height, callback)
@@ -221,108 +221,6 @@ Page.prototype.windowResize = function()
 	}	
 };
 
-Page.prototype.scroller = function()
-{
-	var target, positions, wrap, wrapScrollTop, innerDivs, offset, spacer, id, type;
-
-	positions = [];
-	wrap = $('#wrapAssets');
-	innerDivs = $('#wrapAssets div');
-	spacer = document.createElement('div');
-	wrap.append($(spacer).addClass('clearfix').css('height', '300' + 'px')); 
-
-	function positionsUpdate()
-	{
-		wrapScrollTop = wrap.scrollTop();
-		innerDivs.each(function(index, element)
-		{
-			id = $(this).attr('id'); 
-			if(!id) return;
-			type = id.slice(0,6);
-			if(type == 'assets')
-			{
-				positions.push({name : id, offset : $(this).offset().top-wrap.offset().top + wrapScrollTop, height : $(this).height() });
-			}			
-		});
-		return positions;
-	};
-	
-	function makeSelected(obj, allObj, addClass)
-	{
-		$(allObj).removeClass(addClass);
-		$(obj).addClass(addClass);
-	};
-	
-	function manageScroll(el)
-	{
-		positionsUpdate();
-		target = '#assets' + $(el).attr('data-link');
-		
-		for(var i = 0; i < positions.length; i++)
-		{
-			if(target.replace('#','') == positions[i].name)
-			{
-				offset = positions[i].offset;
-			};
-		};
-		wrap.animate(
-		{
-			scrollTop : offset-20
-		}).slimScroll(
-		{
-			scrollTo : offset	+ 'px'	
-		});
-	};
-	
-	$('#tabs').on('click', 'a', function()
-	{
-		manageScroll(this);
-		makeSelected($(this).parent('li'), '#tabs li', 'selected');
-	});
-	
-	$('#shortcutTabs').on('click', 'a', function()
-	{
-		manageScroll(this);
-	});
-	
-	$('.quickLinks').on('click', 'a', function()
-	{
-		manageScroll(this)
-	});
-
-	wrap.slimscroll();
-	
-};
-
-Page.prototype.downArrows = function()
-{
-	setTimeout(function()
-	{
-		$('.quickLinks a').addClass('bounce');
-		setTimeout(function()
-		{
-			$('.quickLinks a').removeClass('bounce');
-		},1000)
-	},1000)
-	
-	$('.quickLinks, #tabs').on('click', 'a', function()
-	{
-		setTimeout(function()
-		{
-			$('.quickLinks a').addClass('bounce');
-			setTimeout(function()
-			{
-				$('.quickLinks a').removeClass('bounce');
-			},1000)
-		},1000)
-	});
-	
-	$('.quickLinks').on('mouseenter', 'a', function()
-	{
-		$(this).removeClass('bounce');
-	});
-};
-
 Page.prototype.links = function()
 {
 	var _this;
@@ -392,7 +290,7 @@ Page.prototype.orientation = function()
 		}
 	});
 };
-
+/*
 Page.prototype.createCropObj = function()
 {
 	var width, height, obj, rw, rh;
@@ -429,7 +327,30 @@ Page.prototype.crop = function()
 		this.portrait = {'width':this.product.heightMM, 'height': this.product.widthMM, 'cropW': this.product.fheightMM, 'cropH': this.product.fwidthMM  };
 		this.landscape = {'width':this.product.widthMM, 'height': this.product.heightMM, 'cropW': this.product.fwidthMM, 'cropH': this.product.fheightMM  };
 	};
-	this.links();
+	
+};
+*/
+Page.prototype.overlayInit = function()
+{
+	if(this.product.widthMM != this.product.fwidthMM && this.product.heightMM != this.product.fwidthMM)
+	{
+		var buildCropArea = new OverlayBuilder('cropArea', this);
+		buildCropArea.init();
+	}; 
+};
+
+Page.prototype.orientationControls = function()
+{
+	if(this.product.widthMM > this.product.heightMM)				// landscape
+	{	
+		this.portrait = {'width':this.product.widthMM, 'height': this.product.heightMM, 'cropW': this.product.fwidthMM, 'cropH': this.product.fheightMM };
+		this.landscape = {'width':this.product.heightMM, 'height': this.product.widthMM, 'cropW': this.product.fheightMM, 'cropH': this.product.fwidthMM  };
+	} 
+	else													// Portrait
+	{
+		this.portrait = {'width':this.product.heightMM, 'height': this.product.widthMM, 'cropW': this.product.fheightMM, 'cropH': this.product.fwidthMM  };
+		this.landscape = {'width':this.product.widthMM, 'height': this.product.heightMM, 'cropW': this.product.fwidthMM, 'cropH': this.product.fheightMM  };
+	};
 };
 
 Page.prototype.addTheme = function()
@@ -509,6 +430,18 @@ Page.prototype.buildTheme = function(string)
 	canvas.renderAll();
 };
 
+Page.prototype.showInfo = function()
+{
+	var _this, wrap;
+	_this = this;
+	wrap = $('#productInformation');
+	
+	wrap.find('.description').html(_this.product.description);
+	wrap.find('.itemName').html(_this.product.itemName);
+	wrap.find('.price').html('$ ' + _this.product.unitPrice);
+	wrap.find('.productImage').attr('src','img/products/' + _this.product.id + '.jpg');
+};
+
 Page.prototype.export = function()
 {
 	$('header').on('click', '#export', function()
@@ -526,11 +459,16 @@ Page.prototype.export = function()
 
 Page.prototype.init = function()
 {
-	this.crop();							// This initialises canvas
+	this.setUp();
+	this.setUpCanvas(this.product.widthMM, this.product.heightMM);
+	this.orientationControls();
+	this.overlayInit();
+	//	this.crop();							// This initialises canvas
 	this.showInfo();
-	this.scroller();
+	// this.scroller();
 	this.windowResize();
 	this.orientation();
 	this.addTheme();
+	this.links();
 	this.export();
 };

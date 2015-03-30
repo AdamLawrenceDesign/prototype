@@ -413,6 +413,12 @@ canvas:hover
 	box-shadow:0px 0px 8px 4px rgba(50,50,50,0.2);
 } 
 
+.canvas-transitions
+{
+  -webkit-transition: all .5s;
+  -moz-transition: all .5s;
+  transition: all .5s;
+}
 
 #zoom 
 {
@@ -549,13 +555,6 @@ canvas:hover
 aside a:hover
 {
 	color:#4bc9bd;
-}
-
-.canvas-transitions
-{
-  -webkit-transition: all .5s;
-  -moz-transition: all .5s;
-  transition: all .5s;
 }
 
 /*
