@@ -12,23 +12,10 @@ function CanvasSetup(product,themes)
 {
 	var _this = this;
 	this.product = product;
-	// this.portrait = '';
-	// this.landscape = '';
-	// this.current = '';
-	this.canvasState = '';
 	this.overlay = false;
 	this.themes = themes;
 	this.init();
 }
-
-CanvasSetup.prototype.setUp = function()
-{
-	$('aside').css('margin-top', $('header').height() + 'px');				// , main
-	$('#wrapAssets').css('height', window.innerHeight - ($('header').height()+60) + 'px');	// removed $('#wrapSearch').height()*3)
-	$('main').css('height', window.innerHeight - ($('header').height()+40) + 'px');
-	// $('#assetsShortcuts, #assetsThemes, #assetsImages, #assetsText').css('min-height', window.innerHeight - ($('header').height()+($('#wrapSearch').height()*3)) + 'px')
-	$('body, main').css('overflow','hidden');
-};
 
 CanvasSetup.prototype.postDetails = function()
 {
@@ -57,7 +44,7 @@ CanvasSetup.prototype.postDetails = function()
 		pHeight = this.product.widthMM;		// Portrait
 		pWidth = this.product.heightMM;
 		pRatio = this.product.widthMM/this.product.heightMM;
-	};
+	}
 	
 	this.canvasState = 
 	{
@@ -75,36 +62,18 @@ CanvasSetup.prototype.postDetails = function()
 			'ratio': lRatio
 		}
 	};	
+	
+	this.setupPage();
 };
 
-CanvasSetup.prototype.buildLandscape = function()
+CanvasSetup.prototype.setupPage = function()
 {
-	var width, height;
-	width = $('main').innerWidth()*.6;									
-	height = width * this.canvasState.landscape.ratio;
+	$('aside').css('margin-top', $('header').height() + 'px');				// , main
+	$('#wrapAssets').css('height', window.innerHeight - ($('header').height()+60) + 'px');	// removed $('#wrapSearch').height()*3)
+	$('main').css('height', window.innerHeight - ($('header').height()+40) + 'px');
+	$('body, main').css('overflow','hidden');
 	
-	canvas.setWidth(width);
-	canvas.setHeight(height);
-	placeholder.setWidth(width);
-	placeholder.setHeight(height);
-			
-	$('#landscape').find('span').removeClass('hidden').parent().addClass('no-event');
-	$('#portrait').find('span').addClass('hidden').parent().removeClass('no-event');
-};
-
-CanvasSetup.prototype.buildPortrait = function()
-{
-	var width, height;
-	height = $('main').innerHeight()*.65;									
-	width = height * this.canvasState.portrait.ratio;
-	
-	canvas.setWidth(width);
-	canvas.setHeight(height);	
-	placeholder.setWidth(width);
-	placeholder.setHeight(height);
-	
-	$('#landscape').find('span').addClass('hidden').parent().removeClass('no-event');
-	$('#portrait').find('span').removeClass('hidden').parent().addClass('no-event');			
+	this.initCanvas(this.canvasState.current);	
 };
 
 CanvasSetup.prototype.initCanvas = function(canvasState)
@@ -118,18 +87,173 @@ CanvasSetup.prototype.initCanvas = function(canvasState)
 	else
 	{
 		this.buildPortrait();
-	};
+	}
 	
+	this.eventListener();
+	this.canvasResize();
+};
+
+CanvasSetup.prototype.buildLandscape = function()
+{
+	var width, height;
+	
+	width = $('main').innerWidth()*0.6;									
+	height = width * this.canvasState.landscape.ratio;
+	
+	/*===========================*/ // Here you could parse the JSON string and rebuild the canvas making a ration of new and current height
+	// dont go to this function if you wan to parse string
+	this.canvasSetup(width, height);
+			
+	$('#landscape').find('span').removeClass('hidden').parent().addClass('no-event');
+	$('#portrait').find('span').addClass('hidden').parent().removeClass('no-event');
+
+	this.canvasState.current = 'landscape';
+	this.canvasSize = {'width': width, 'height': height};
+};
+
+CanvasSetup.prototype.buildPortrait = function()
+{
+	var width, height;
+	
+	height = $('main').innerHeight()*0.65;	
+	width = height * this.canvasState.portrait.ratio;
+	
+	/*===========================*/ // Here you could parse the JSON string and rebuild the canvas making a ration of new and current height
+	// dont go to this function tho
+	this.canvasSetup(width, height);
+	
+	$('#landscape').find('span').addClass('hidden').parent().removeClass('no-event');
+	$('#portrait').find('span').removeClass('hidden').parent().addClass('no-event');
+	
+	this.canvasState.current = 'portrait';
+	this.canvasSize = {'width': width, 'height': height};
+};
+
+CanvasSetup.prototype.canvasSetup = function(width, height)
+{
+	canvas.clear();
+	canvas.setWidth(width);
+	canvas.setHeight(height);
+	placeholder.setWidth(width);
+	placeholder.setHeight(height);
+	canvas.add(placeholder);
+	canvas.renderAll();
 };
 
 /*=============================*/
 
+CanvasSetup.prototype.windowResize = function()
+{
+	var rtime, timeout, delta, _this;
+	
+	_this = this;
+	rtime = new Date(1, 1, 2000, 12, 0, 0);
+	timeout = false;
+	delta = 200;
+	
+	$(window).resize(function()
+	{
+		$('#screenChange').removeClass('hidden');
+		rtime = new Date();
+		
+		if (timeout === false)
+		{
+			timeout = true;
+			setTimeout(resizeend, delta);
+		}
+	});
+	
+	function resizeend()
+	{
+		if (new Date() - rtime < delta)
+		{
+			setTimeout(resizeend, delta);
+		} 
+		else
+		{
+			timeout = false;
+			
+			_this.setupPage();
+			_this.initCanvas(_this.canvasState.current);
+
+			setTimeout(function()
+			{
+				$('#screenChange').addClass('hidden');
+			},200);
+		}               
+	}	
+};
+
+CanvasSetup.prototype.resetPage = function(callback)
+{
+	canvas.setWidth(0);
+	canvas.setHeight(0);
+	callback();
+};
+
+CanvasSetup.prototype.eventListener = function()
+{
+	var _this;
+	_this = this;
+	
+	/*== Originally used switch statements here but would not work ==*/
+		
+	$('#landscape').on('click', function()
+	{
+		_this.resetPage(function()
+		{
+			setTimeout(function()
+			{
+				_this.buildLandscape();
+			},400);
+		});
+	});
+	
+	$('#portrait').on('click', function()
+	{
+		_this.resetPage(function()
+		{
+			setTimeout(function()
+			{
+				_this.buildPortrait();
+			},400);
+		});
+	});
+
+	$('#zoom').on('click', '#rotate', function()
+	{
+		switch (_this.canvasState.current)
+		{
+			case 'portrait':
+				_this.resetPage(function()
+				{
+					setTimeout(function()
+					{
+						_this.buildLandscape();
+					},400);
+				});
+			break;
+			
+			case 'landscape':
+				_this.resetPage(function()
+				{
+					setTimeout(function()
+					{
+						_this.buildPortrait();
+					},400);
+				});
+			break;
+		}
+	});
+};
+
 CanvasSetup.prototype.canvasResize = function()
 {
-	var string, width, height, insert, cropWidth, cropHeight, cropDisplay, wrapCrop;
-	wrapCrop = $('#cropMark');
+	var width, height, insert, _this;
 	
-	function changeSize(string, ratio, callback)
+	_this = this;
+	
+	function changeSize(string, ratio)
 	{
 		width = string[0].width*ratio;
 		height = string[0].height*ratio;
@@ -158,137 +282,26 @@ CanvasSetup.prototype.canvasResize = function()
 				case 'circle':
 					string[i].radius = string[i].radius*ratio;
 					break;
-			};
+			}
 			string[0].selectable = false;
-		};
+		}
 		
 		insert = '{"objects":' + JSON.stringify(string) + ',"background":"#fff"}';
 		canvas.loadFromJSON(insert);
 		canvas.renderAll();
-		callback(ratio);
-	};
-	
-	function cropDisplay(wrapCrop,ratio)
-	{
-		wrapCrop.css({'width':wrapCrop.outerWidth()*ratio+'px','height':wrapCrop.outerHeight()*ratio + 'px'}).fadeIn();
-	};
+		_this.canvasSize = {'width': width, 'height': height};
+	}
 	
 	$('#zoom').on('click', '#canvasLarger', function()
 	{
-		changeSize(eval(JSON.stringify(canvas).replace('{"objects":','').replace(',"background":"#fff"}','')),1.09, function(ratio)
-		{
-			cropDisplay(wrapCrop,ratio);
-		});
+		changeSize(eval(JSON.stringify(canvas).replace('{"objects":','').replace(',"background":"#fff"}','')), 1.09);
 	});
 	
 	$('#zoom').on('click', '#canvasSmaller', function()
 	{
 		if($('canvas').height()<150)return;
 		if($('canvas').width()<150)return;
-		changeSize(eval(JSON.stringify(canvas).replace('{"objects":','').replace(',"background":"#fff"}','')),.92, function(ratio)
-		{
-			cropDisplay(wrapCrop,ratio);
-		});
-	});
-	
-};
-
-CanvasSetup.prototype.windowResize = function()
-{
-	var rtime, timeout, delta, page, _this;
-	
-	_this = this;
-	rtime = new Date(1, 1, 2000, 12,00,00);
-	timeout = false;
-	delta = 200;
-	page = this;
-	
-	$(window).resize(function()
-	{
-		$('#screenChange').removeClass('hidden');
-		rtime = new Date();
-		
-		if (timeout === false)
-		{
-			timeout = true;
-			setTimeout(resizeend, delta);
-		}
-	});
-	
-	function resizeend()
-	{
-		if (new Date() - rtime < delta)
-		{
-			setTimeout(resizeend, delta);
-		} 
-		else
-		{
-			timeout = false;
-			
-			_this.setUp();
-			_this.initCanvas(_this.canvasState.current);
-			/*
-			switch (_this.current)
-			{
-				case 'landscape':
-					// _this.setUpCanvas(_this.portrait.width, _this.portrait.height);
-				break;
-				
-				case 'portrait':
-					// _this.setUpCanvas(_this.landscape.width, _this.landscape.height);
-				break;
-			}
-			*/
-			setTimeout(function()
-			{
-				$('#screenChange').addClass('hidden');
-			},200);
-		}               
-	}	
-};
-
-CanvasSetup.prototype.resetPage = function()
-{
-	canvas.setWidth(0);
-	canvas.setHeight(0);
-	$('#cropMark').css('display','none');
-};
-
-CanvasSetup.prototype.orientation = function()
-{
-	var _this;
-	_this = this;
-
-	$('#orientationLinks').on('click','a', function()
-	{
-		_this.resetPage();
-
-		switch ($(this).attr('id'))
-		{
-			case 'landscape':
-				// _this.setUpCanvas(_this.portrait.width, _this.portrait.height);
-			break;
-			
-			case 'portrait':
-				// _this.setUpCanvas(_this.landscape.width, _this.landscape.height);
-			break;
-		}
-	});
-	
-	$('#zoom').on('click', '#rotate', function()
-	{
-		_this.resetPage();
-		
-		switch (_this.current)
-		{
-			case 'landscape':
-				// _this.setUpCanvas(_this.landscape.width, _this.landscape.height);
-			break;
-			
-			case 'portrait':
-				// _this.setUpCanvas(_this.portrait.width, _this.portrait.height);
-			break;
-		}
+		changeSize(eval(JSON.stringify(canvas).replace('{"objects":','').replace(',"background":"#fff"}','')),0.92);
 	});
 };
 
@@ -297,23 +310,13 @@ CanvasSetup.prototype.overlayInit = function()
 	if(this.product.widthMM != this.product.fwidthMM && this.product.heightMM != this.product.fwidthMM)
 	{
 		var buildCropArea = new OverlayBuilder('cropArea', this);
-	}; 
+	}
 };
 
 CanvasSetup.prototype.init = function()
 {
 	$('canvas, .canvas-container').addClass('canvas-transitions');
-	this.setUp();
 	this.postDetails();
-	this.initCanvas(this.canvasState.current);
-	// this.setUpCanvas(this.product.widthMM, this.product.heightMM);
-	// this.orientationControls();
 	this.overlayInit();
-	//	this.crop();							// This initialises canvas
-	
-	// this.scroller();
 	this.windowResize();
-	// this.orientation();
-	// this.addTheme();
-	
 };

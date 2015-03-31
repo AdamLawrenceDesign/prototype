@@ -15,7 +15,9 @@ function OverlayBuilder(type, __this)		// change parent
 
 OverlayBuilder.prototype.init = function()
 {
-	switch(this.type)
+	// have put this here so we can add more overlays if needed
+	
+	switch(this.type)		
 	{
 		case 'cropArea':
 			this.cropAreaInit();
@@ -26,33 +28,14 @@ OverlayBuilder.prototype.init = function()
 
 OverlayBuilder.prototype.cropAreaInit = function()	
 {
-	var ratioW, ratioH;
-
-	ratioW = this.__this.product.fwidthMM / this.__this.product.widthMM;
-	ratioH = this.__this.product.fheightMM / this.__this.product.heightMM;
-	this.cropDetails = {'ratioW': ratioW, 'ratioH': ratioH };
-
-	this.setRatio();
-	this.buildCropMark();
-};
-
-OverlayBuilder.prototype.setRatio = function()
-{
-	var ratioW, ratioH;
+	var ratioWL, ratioHL, ratioWP, ratioHP;
 	
-	switch(this.__this.canvasState.current)
-	{
-		case 'portrait':
-			ratioW = this.__this.product.fwidthMM / this.__this.product.widthMM;
-			ratioH = this.__this.product.fheightMM / this.__this.product.heightMM;
-			this.cropDetails = {'ratioW': ratioW, 'ratioH': ratioH };
-		break;
-		case 'landscape':
-			ratioW = this.__this.product.fwidthMM / this.__this.product.widthMM;
-			ratioH = this.__this.product.fheightMM / this.__this.product.heightMM;
-			this.cropDetails = {'ratioW': ratioH, 'ratioH': ratioW };
-		break;
-	}
+	ratioWP = this.__this.product.fwidthMM / this.__this.product.widthMM;
+	ratioHP = this.__this.product.fheightMM / this.__this.product.heightMM;
+	ratioWL = this.__this.product.fheightMM / this.__this.product.heightMM;
+	ratioHL = this.__this.product.fwidthMM / this.__this.product.widthMM;
+	this.cropDetails = {'ratioWL': ratioWL, 'ratioHL': ratioHL, 'ratioWP': ratioWP, 'ratioHP': ratioHP };
+	this.buildCropMark();
 };
 
 OverlayBuilder.prototype.buildCropMark = function()	
@@ -70,16 +53,35 @@ OverlayBuilder.prototype.buildCropMark = function()
 OverlayBuilder.prototype.cropSetSize = function()	
 {
 	var width, height, _this;
-	
 	_this = this;
-	width = this.__this.canvasSize.width*this.cropDetails.ratioW;
-	height = this.__this.canvasSize.height*this.cropDetails.ratioH;
-	this.cropObj.css({'width': width + 'px', 'height': height + 'px'});
-	
+
 	setTimeout(function()
 	{
-		_this.cropObj.fadeIn();
+		_this.check(function(width, height)
+		{
+			_this.cropObj.css({'width': width + 'px', 'height': height + 'px'});
+			_this.cropObj.fadeIn();
+		});
 	}, 400);
+};
+
+OverlayBuilder.prototype.check = function(callback)
+{
+	var width, height, _this;
+	
+	_this = this;
+	
+	if(this.__this.canvasState.current == 'portrait')
+	{
+		width = _this.__this.canvasSize.width*this.cropDetails.ratioWP;
+		height = _this.__this.canvasSize.height*this.cropDetails.ratioHP;
+	}
+	else
+	{
+		width = _this.__this.canvasSize.width*this.cropDetails.ratioWL;
+		height = _this.__this.canvasSize.height*this.cropDetails.ratioHL;
+	};
+	callback(width, height);
 };
 
 OverlayBuilder.prototype.listener = function()
@@ -130,35 +132,4 @@ OverlayBuilder.prototype.listener = function()
 			},800);
 		}               
 	}	
-	
 };
-
-/*
-
-	setTimeout(function()
-	{
-		$('#cropMark').css({'height': height*_this.cropRatio.width +'px','width': width*_this.cropRatio.width + 'px','display':'block'});
-	},400);
-
-OverlayBuilder.prototype.crop = function()
-{
-	if(this.product.widthMM != this.product.fwidthMM && this.product.heightMM != this.product.fwidthMM)
-	{
-		this.createCropObj();
-	}; 
-	
-	this.setUp();
-	this.setUpCanvas(this.product.widthMM, this.product.heightMM);
-	
-	if(this.product.widthMM > this.product.heightMM)				// landscape
-	{	
-		this.portrait = {'width':this.product.widthMM, 'height': this.product.heightMM, 'cropW': this.product.fwidthMM, 'cropH': this.product.fheightMM };
-		this.landscape = {'width':this.product.heightMM, 'height': this.product.widthMM, 'cropW': this.product.fheightMM, 'cropH': this.product.fwidthMM  };
-	} 
-	else													// Portrait
-	{
-		this.portrait = {'width':this.product.heightMM, 'height': this.product.widthMM, 'cropW': this.product.fheightMM, 'cropH': this.product.fwidthMM  };
-		this.landscape = {'width':this.product.widthMM, 'height': this.product.heightMM, 'cropW': this.product.fwidthMM, 'cropH': this.product.fheightMM  };
-	};
-	
-};*/
