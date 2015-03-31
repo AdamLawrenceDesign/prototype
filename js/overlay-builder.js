@@ -10,20 +10,6 @@ function OverlayBuilder(type, __this)		// change parent
 {
 	this.type = type;
 	this.__this = __this;
-	this.ratio = [];
-	this.cropDetails = '';
-	/*{
-						'position': displayInfo.current, 
-						'landscape': displayInfo.landscape,
-						'portrait': displayInfo.portrait,
-						'ratio': [
-							{'width': displayInfo.product.fwidthMM/displayInfo.product.widthMM},
-							{'height': displayInfo.product.fwidthMM/displayInfo.product.widthMM}
-							]
-						};
-	*/
-	//console.log(displayInfo.current);
-	
 	this.init();
 };
 
@@ -33,39 +19,120 @@ OverlayBuilder.prototype.init = function()
 	{
 		case 'cropArea':
 			this.cropAreaInit();
+			this.listener();
 			break;
 	}
 };
 
-OverlayBuilder.prototype.cropAreaInit = function()	// Need to Post Width and Height
+OverlayBuilder.prototype.cropAreaInit = function()	
 {
-	var _this, rw, rh, obj, width, height;
+	var ratioW, ratioH;
+
+	ratioW = this.__this.product.fwidthMM / this.__this.product.widthMM;
+	ratioH = this.__this.product.fheightMM / this.__this.product.heightMM;
+	this.cropDetails = {'ratioW': ratioW, 'ratioH': ratioH };
+
+	this.setRatio();
+	this.buildCropMark();
+};
+
+OverlayBuilder.prototype.setRatio = function()
+{
+	var ratioW, ratioH;
+	
+	switch(this.__this.canvasState.current)
+	{
+		case 'portrait':
+			ratioW = this.__this.product.fwidthMM / this.__this.product.widthMM;
+			ratioH = this.__this.product.fheightMM / this.__this.product.heightMM;
+			this.cropDetails = {'ratioW': ratioW, 'ratioH': ratioH };
+		break;
+		case 'landscape':
+			ratioW = this.__this.product.fwidthMM / this.__this.product.widthMM;
+			ratioH = this.__this.product.fheightMM / this.__this.product.heightMM;
+			this.cropDetails = {'ratioW': ratioH, 'ratioH': ratioW };
+		break;
+	}
+};
+
+OverlayBuilder.prototype.buildCropMark = function()	
+{
+	var obj, wrap;
+	
+	obj = document.createElement('div');
+	$(obj).attr('id','cropMark').css({'display':'none','position':'absolute','pointer-events':'none','margin':'auto','z-index':'2000','border':'1px dashed #ddd' }).addClass('absolute_vert_center'); 	// 'width': width, 'height': height
+	$('#wrapCanvas').append(obj);
+	
+	this.cropObj = $(obj);	
+	this.cropSetSize();
+};
+
+OverlayBuilder.prototype.cropSetSize = function()	
+{
+	var width, height, _this;
 	
 	_this = this;
+	width = this.__this.canvasSize.width*this.cropDetails.ratioW;
+	height = this.__this.canvasSize.height*this.cropDetails.ratioH;
+	this.cropObj.css({'width': width + 'px', 'height': height + 'px'});
 	
-	rw = this.__this.product.fwidthMM / this.__this.product.widthMM;
-	rh = this.__this.product.fheightMM / this.__this.product.heightMM;
-	
-	obj = document.createElement('div');
-	$(obj).attr('id','cropMark').css({'display':'none','position':'absolute','pointer-events':'none','margin':'auto','z-index':'2000','border':'1px dashed #ddd', 'width': width, 'height': height }).addClass('absolute_vert_center');
-	$('#wrapCanvas').append(obj);	
-	
-	
-	
-	/*
-	var width, height, obj, rw, rh;
-	
-	obj = document.createElement('div');
-	rw = this.product.fwidthMM/this.product.widthMM;
-	rh = this.product.fheightMM/this.product.heightMM;
-	
-	this.cropObj = obj;
-	this.cropRatio = {width : rw, height : rh};
-	
-	$(obj).attr('id','cropMark').css({'display':'none','position':'absolute','pointer-events':'none','margin':'auto','z-index':'2000','border':'1px dashed #ddd', 'width': width, 'height': height }).addClass('absolute_vert_center');
-	$('#wrapCanvas').append(obj);	
-	*/
+	setTimeout(function()
+	{
+		_this.cropObj.fadeIn();
+	}, 400);
 };
+
+OverlayBuilder.prototype.listener = function()
+{
+	var _this;
+	_this = this;
+	
+	$('#landscape, #portrait, #rotate, #canvasLarger, #canvasSmaller').on('click', function()
+	{
+		_this.cropObj.css('display','none');
+		setTimeout(function()
+		{
+			_this.cropSetSize();
+		},800);
+	});
+	
+	var rtime, timeout, delta, _this;
+	
+	_this = this;
+	rtime = new Date(1, 1, 2000, 12,00,00);
+	timeout = false;
+	delta = 200;
+	
+	$(window).resize(function()
+	{
+		rtime = new Date();
+		
+		if (timeout === false)
+		{
+			timeout = true;
+			setTimeout(resizeend, delta);
+		}
+	});
+	
+	function resizeend()
+	{
+		if (new Date() - rtime < delta)
+		{
+			setTimeout(resizeend, delta);
+		} 
+		else
+		{
+			timeout = false;
+			_this.cropObj.css('display','none');
+			setTimeout(function()
+			{
+				_this.cropSetSize();
+			},800);
+		}               
+	}	
+	
+};
+
 /*
 
 	setTimeout(function()

@@ -33,7 +33,7 @@ $(function()
 	canvas.setHeight(1);
 	placeholder.setWidth(1);
 	placeholder.setHeight(1);
-	canvas.add(placeholder);
+	// canvas.add(placeholder);
 	
 	/*================*/								// Make your server call
 	
