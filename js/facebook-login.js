@@ -124,7 +124,7 @@ function initAPI(authResponse)
 		getUserProfileImage();
 		// getAlbums(authResponse[0].userID);
 		console.log('catch');
-		window.location.assign('http://192.168.0.177/_testing/prototype/products.html');
+		window.location.assign('http://192.168.0.190/_testing/prototype/products.html');
 	});
 }
 

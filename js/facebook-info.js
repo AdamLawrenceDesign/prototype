@@ -6,7 +6,7 @@
 	
 *************************************************/
 
-var authResponse;
+var authResponse, userID;
 
 window.fbAsyncInit = function()
 {
@@ -37,6 +37,7 @@ function statusChangeCallback(response)
 	if (response.status === 'connected')
 	{
 		// Logged into your app and Facebook.
+		userID = response.authResponse.userID; console.log(userID)
 		authResponse = { 
 							'accessToken' : response.authResponse.accessToken, 
 							'expiresIn' : response.authResponse.expiresIn,

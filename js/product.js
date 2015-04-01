@@ -248,11 +248,8 @@ FabricUI.prototype.preBuiltText = function(lookUp)
 
 FabricUI.prototype.init = function()
 {
-	// preloadPost(this.subject.Images);
-	// this.assetsSizes();
 	this.assetsThemes();
 	this.assetsImages();
 	this.assetsText();
-	// var addScroll = new ScrollManager('#wrapAssets','#wrapAssets div');
 	var addScroll = new ScrollManager('wrapAssets','div');
 };

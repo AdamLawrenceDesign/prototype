@@ -27,11 +27,11 @@ CanvasSetup.prototype.postDetails = function()
 		
 		lHeight = this.product.widthMM;	// Landscape
 		lWidth = this.product.heightMM;
-		lRatio = this.product.widthMM/this.product.heightMM;
+		lRatio = this.product.heightMM/this.product.widthMM;
 		
 		pHeight = this.product.widthMM;		// Portrait
 		pWidth = this.product.heightMM;
-		pRatio = this.product.widthMM/this.product.heightMM;
+		pRatio = this.product.heightMM/this.product.widthMM;
 	} 
 	else															// Portrait
 	{
@@ -97,7 +97,7 @@ CanvasSetup.prototype.buildLandscape = function()
 {
 	var width, height;
 	
-	width = $('main').innerWidth()*0.6;									
+	width = $('main').innerWidth()*0.65;									
 	height = width * this.canvasState.landscape.ratio;
 	
 	/*===========================*/ // Here you could parse the JSON string and rebuild the canvas making a ration of new and current height
@@ -115,9 +115,10 @@ CanvasSetup.prototype.buildPortrait = function()
 {
 	var width, height;
 	
-	height = $('main').innerHeight()*0.65;	
+	height = $('main').innerHeight()*0.7;	
 	width = height * this.canvasState.portrait.ratio;
 	
+	console.log('Build Portrait { width: ' + width + '; height: ' + height + '; ratio: ' + this.canvasState.portrait.ratio + '}');
 	/*===========================*/ // Here you could parse the JSON string and rebuild the canvas making a ration of new and current height
 	// dont go to this function tho
 	this.canvasSetup(width, height);
@@ -319,4 +320,5 @@ CanvasSetup.prototype.init = function()
 	this.postDetails();
 	this.overlayInit();
 	this.windowResize();
+	var initLayoutManager = new LayoutManager(this, this.themes);
 };

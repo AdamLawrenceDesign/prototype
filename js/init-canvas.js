@@ -1,12 +1,36 @@
 $(function()
 {
-	var url, id, product, itemName;
+	var url, id, product, itemName, productID, webSiteName, userID;
+	
+	if(typeof(Storage) !== "undefined")
+	{
+		// Code for localStorage/sessionStorage.
+		console.log('Web Storage Available');
+		localStorage.setItem('test', 'Catch');
+		localStorage.setItem('test2', 'Catch2');
+	} 
+	else
+	{
+		// Sorry! No Web Storage support..
+		console.log('Sorry No Web Storage');
+	}
+
+	// console.log(localStorage.test);
+	// console.log(localStorage.test2);
 
 	url = window.location.href;
 	id = url.substr(url.search("=") + 1, url.length);
 	itemName = url.substring(url.lastIndexOf("?")+1,url.lastIndexOf("=")).replace(/%20/g,' ');
 	
-	/*================*/								// Set Up Canvas 
+	/*=================================================*/ 
+	// 		Setting Up Export
+	
+	productID = id.replace('#','');
+	webSiteName = 'Prototype'; 
+	userID = 1235;
+	
+	/*=================================================*/ 
+	// 		Setting up canvas 
 	
 	$('#wrapCanvas').css('opacity','0');
 	
@@ -33,9 +57,9 @@ $(function()
 	canvas.setHeight(1);
 	placeholder.setWidth(1);
 	placeholder.setHeight(1);
-	// canvas.add(placeholder);
 	
-	/*================*/								// Make your server call
+	/*=================================================*/ 
+	// 		Make the server
 	
 	$.ajax(
 	{
@@ -75,7 +99,7 @@ $(function()
 					};
 					
 					var samplePage = new CanvasSetup(value, themes);
-					var startControllers = new StandardControllers(value);
+					var startControllers = new StandardControllers(webSiteName, userID, productID, value);
 					var sampleUI = new FabricUI(
 													'client information', 
 													{Images:
@@ -156,5 +180,29 @@ $(function()
 	
 									
 	var standardPalette = new Palette(false, "['(0,0,0)','(250,250,250)','(238,236,225)','(31,73,125)','(79,129,189)','(192,80,77)','(155,187,87)','(128,100,162)','(75,172,198)','(247,150,70)']");
-	
+	/*
+	$('header').on('click', '#export', function()
+	{
+		$.ajax(
+		{
+			url: 'http://192.168.0.190/AdvAPI/api/WJValues',
+			type: 'POST',
+			username: 'WebAPIPhotocreateUser',
+			password: '@dvw3b@piu$3r',
+			data: 
+			{
+				"fromWhere": 		'prototype' ,		// Portal Name
+				"json": 			'JSON String',				// json
+				"webOrderItemID": 	1234,			// Product ID
+				"userID": 			13245				// UserID
+			},
+			success: function(data)
+			{
+				console.log('Success: item added to table');
+				console.log(data);
+			}
+		});		
+		// window.location = 'http://192.168.0.177/_testing/prototype/payment.html';
+	});
+	*/
 });
