@@ -102,7 +102,7 @@ StandardControllers.prototype.postToCart = function(jsonID, string)
 			console.log('JSON String Updated');
 			console.log(cartValue);
 			//_this.postToCart();
-			window.location = 'http://192.168.0.190/cartLink.aspx?' + cartValue;
+			// window.location = 'http://192.168.0.190/cartLink.aspx?' + cartValue;
 		}
 	});
 	
@@ -171,33 +171,6 @@ StandardControllers.prototype.export = function()
 			});
 		}
 
-		/*=====================================*/
-		// Post items to cart
-		/*
-		var postToCart = function(jsonID)
-		{
-			$.ajax(
-			{
-				url: 'http://192.168.0.190/AdvAPI/api/WJValues/' + jsonID,
-				type: 'PUT',
-				username: 'WebAPIPhotocreateUser',
-				password: '@dvw3b@piu$3r',
-				data: 
-				{
-					"json": string,				// json
-				},
-				success: function(data)
-				{
-					console.log('JSON String Updated');
-					console.log(data);
-					
-					//_this.postToCart();
-					
-					// window.location = 'http://192.168.0.177/_testing/prototype/payment.html';
-				}
-			});
-		};
-		*/
 	});
 	
 };

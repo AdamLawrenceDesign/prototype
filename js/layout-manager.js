@@ -21,18 +21,14 @@ LayoutManager.prototype.listener = function()
 	$('#listThemes').on('click', 'a', function(event)
 	{
 		event.preventDefault();
-		console.log(_this.obj);
 		string = _this.obj.Themes[$(this).attr('data-lookUp')].JSON;
 		_this.themeParseString(eval(string.replace('{"objects":','').replace(',"background":"#fff"}','')));
-		// string = _this.themes.Themes[$(this).attr('data-lookUp')].JSON;
-		// _this.themeParseString(eval(string.replace('{"objects":','').replace(',"background":"#fff"}','')));
-		// console.log(string);
 	});
 };
 
 LayoutManager.prototype.themeParseString = function(string)
 {
-	var _this, targetH, targetW, orientation;
+	var _this;
 	_this = this;
 	
 	this.__this.resetPage(function()
@@ -42,60 +38,16 @@ LayoutManager.prototype.themeParseString = function(string)
 			if(string[0].width > string[0].height)				// landscape
 			{	
 				_this.__this.buildLandscape();
-				//_this.__this.canvasSetup(_this.__this.landscape.width, _this.__this.landscape.height);
-				console.log('landscape');
+				_this.buildTheme(string);
 			};
 			
 			if(string[0].width < string[0].height)				// Portrait 
 			{
 				_this.__this.buildPortrait();
-				console.log('Portrait');
+				_this.buildTheme(string);
 			};
 		},400);
-		/*
-		this.__this.resetPage(function()
-		{
-			_this.__this.canvasSetup(_this.__this.landscape.width, _this.__this.landscape.height);
-		});
-		
-		setTimeout(function()
-		{
-			_this.buildTheme(string);
-		},400);
-		return;
-		*/
 	}); 
-	/*
-	targetH = $('.canvas-container').outerHeight();
-	targetW = $('.canvas-container').outerWidth();
-	
-	if(targetH > targetW)
-	{
-		orientation = 'portrait';
-	}
-	else 
-	{
-		orientation = 'landscape';
-	};
-	
-	console.log(this.__this);
-	console.log('Target Height: ' + targetH + '; Target Width: ' + targetW);
-	
-	
-	if(string[0].height > string[0].width || orientation == 'portrait') 				// Portrait
-	{
-		console.log('Portrait');
-		this.__this.resetPage(function()
-		{
-			_this.__this.setUpCanvas(this.__this.landscape.width, this.__this.landscape.height);
-		});
-		setTimeout(function()
-		{
-			_this.buildTheme(string);
-		},400);
-		return;
-	}
-	*/
 };
 
 LayoutManager.prototype.buildTheme = function(string)
@@ -104,8 +56,6 @@ LayoutManager.prototype.buildTheme = function(string)
 	
 	_this = this;
 	ratio = canvas._objects[0].width/string[0].width;
-	
-	console.log('Current Canvas: ' + canvas._objects[0].width + ', Current Canvas Height: ' + canvas._objects[0].height);
 
 	for(var i = 0; i < string.length; i++)
 	{
@@ -133,6 +83,5 @@ LayoutManager.prototype.buildTheme = function(string)
 
 LayoutManager.prototype.init = function()
 {
-	console.log(this.obj);
 	this.listener();
 };
