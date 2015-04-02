@@ -40,35 +40,24 @@ StandardControllers.prototype.showInfo = function()
 	wrap.find('.productImage').attr('src','img/products/' + _this.product.id + '.jpg');
 };
 
-StandardControllers.prototype.showInfo = function()
-{
-	var _this, wrap;
-	_this = this;
-	wrap = $('#productInformation');
-	
-	wrap.find('.description').html(_this.product.description);
-	wrap.find('.itemName').html(_this.product.itemName);
-	wrap.find('.price').html('$ ' + _this.product.unitPrice);
-	wrap.find('.productImage').attr('src','img/products/' + _this.product.id + '.jpg');
-};
-
 StandardControllers.prototype.postToCart = function(jsonID, string)
 {
 	var cartValue, WebClientAssetId, ProductId, ImageUrl, ProductDescription, ProductName,	Price, Quantity, DiscountAmount, TotalAmount, WebDataItem, SICCode, WebClientID, PortalName;
 	
-	WebClientAssetId =  '21674';         // 301412 (prepay – but we will create a new one)
+	WebClientAssetId =  '4239';         // 301412 (prepay – but we will create a new one)
 	ProductId        = this.productID;    						 // 23 (mug)
 	ImageUrl         = '~/_testing/prototype/' + $('.productImage').attr('src');         // (a snip from the final design – or thumbnail from the webclientassetid or ProductID)
 	ProductDescription = $('.description').html();       // Standard Mug – Right Handed
 	ProductName      = $('.itemName').html();         // Standard Mug
-	Price            = $('.price').html().replace('$','').replace(/\s/g,'1');         // 19.95 (unit price) 
+	Price            = $('.price').html().replace('$','').replace(/\s/g,'');         // 19.95 (unit price) 
 	Quantity         = $('#qty').val();        // 1
 	DiscountAmount   = 0;         				//   0
-	TotalAmount      = parseInt($('.price').html().replace('$ ','')) * parseInt($('#qty').val());			//  19.95
+	TotalAmount      = Price * $('#qty').val();			//  19.95
 	WebDataItem      = 'OrderType=' + 'Photocreate' + '_ProductID=' + this.productID + '_JSONID=' + jsonID;         //  OrderType=Photocreate|ProductID=23|JSONID=1001 (|=line returns)
-	SICCode          = 'TBBMDNY52';			//  ‘Get the sic code’	Sample added
-	WebClientID      = '21674';         			// ‘Get Encrypted Code’
+	SICCode          = 'L9TG6YFGD';			//  ‘Get the sic code’	Sample added
+	WebClientID      = 'nbnhmHqqedB/EwFl1O+RUA==';         			// ‘Get Encrypted Code’
 	PortalName       = '[advancedyou-school]';          //  ‘’
+	OriginURL 		 = '~' +  window.location.href.replace('http://192.168.0.190','');
 	
 	cartValue = 
 		'WebClientAssetId=' + WebClientAssetId + 
@@ -83,10 +72,9 @@ StandardControllers.prototype.postToCart = function(jsonID, string)
 		'&WebDataItem=' + WebDataItem +
 		'&SICCode=' + SICCode +
 		'&WebClientID=' + WebClientID +
-		'&PortalName=' + PortalName;
-	
-	console.log(cartValue);
-	
+		'&PortalName=' + PortalName + 
+		'&OriginURL=' + OriginURL;
+
 	$.ajax(
 	{
 		url: 'http://192.168.0.190/AdvAPI/api/WJValues/' + jsonID,
@@ -99,10 +87,10 @@ StandardControllers.prototype.postToCart = function(jsonID, string)
 		},
 		success: function(data)
 		{
-			console.log('JSON String Updated');
-			console.log(cartValue);
-			//_this.postToCart();
-			// window.location = 'http://192.168.0.190/cartLink.aspx?' + cartValue;
+			// console.log('JSON String Updated');
+			// console.log(cartValue);
+			// console.log(Price.toFixed(2) * $('#qty').val().toFixed(2));
+			window.location = 'http://192.168.0.190/cartLink.aspx?' + cartValue;
 		}
 	});
 	

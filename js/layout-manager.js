@@ -1,6 +1,6 @@
 /***********************************************
 	
-	Function:	Theme Builder 
+	Function:	Layout Builder 
 	Author: 	Adam Lawrence
 	Contact: 	adam@adamlawrencedesign.com	
 	
@@ -11,7 +11,7 @@ function LayoutManager(__this, obj)		// change parent
 	this.__this = __this;
 	this.obj = obj;
 	this.init();
-};
+}
 
 LayoutManager.prototype.listener = function()
 {
@@ -39,13 +39,13 @@ LayoutManager.prototype.themeParseString = function(string)
 			{	
 				_this.__this.buildLandscape();
 				_this.buildTheme(string);
-			};
+			}
 			
 			if(string[0].width < string[0].height)				// Portrait 
 			{
 				_this.__this.buildPortrait();
 				_this.buildTheme(string);
-			};
+			}
 		},400);
 	}); 
 };
@@ -72,9 +72,9 @@ LayoutManager.prototype.buildTheme = function(string)
 			case 'circle':
 				string[i].radius = string[i].radius*ratio;
 				break;
-		};
+		}
 		string[0].selectable = false;
-	};
+	}
 	
 	insert = '{"objects":' + JSON.stringify(string) + ',"background":"#fff"}';
 	canvas.loadFromJSON(insert);

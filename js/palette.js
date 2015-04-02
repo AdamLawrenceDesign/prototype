@@ -21,7 +21,6 @@ function addImage(path, width, height, left, top)
 		canvas.add(img);
 	});
 	canvas.setActiveObject;
-	
 };
 
 function listGrid(obj)
@@ -119,17 +118,6 @@ Palette.prototype.paletteCreateColours = function()
 		$(wrap).append(block);
 		$('#colourContainer').append(wrap);
 	}
-};
-
-Palette.prototype.userInput = function(inputType, wrap, el, callback)
-{
-	var _this = this;
-	$(wrap).on(inputType, el, function(event)
-	{	
-		event.preventDefault();
-		var el = this;
-		callback(_this, el, event);
-	});
 };
 
 Palette.prototype.manageEvents = function()
@@ -260,7 +248,7 @@ Palette.prototype.manageEvents = function()
 		canvas.renderAll();
 	});
 	
-}; 
+};
 
 Palette.prototype.isRealValue = function(activeObj)
 {
@@ -270,10 +258,77 @@ Palette.prototype.isRealValue = function(activeObj)
 Palette.prototype.addObj = function()
 {
 	var _this = this;
+	/*
+	canvas.on('object:added', function(event)
+	{
+		_this.activeObj = event.target;
+		_this.initPalette(_this.activeObj.get('type'));
+	});
+	*/
+};
+
+Palette.prototype.initPalette = function(type)
+{
+	var _this;
+	_this = this;
+	
+	switch(type)
+	{
+		case 'image':
+			_this.paletteType('image');
+			_this.show();
+			break;
+		case 'i-text':
+			_this.paletteType('i-text');
+			_this.show();
+			break;
+		case 'Solid':
+			_this.paletteType('solid');
+		case '':
+			_this.hide();
+			_this.activeObj = false;
+			break;
+	};
+};
+
+Palette.prototype.show = function()
+{
+	$('#palette').removeClass('hide-scale');
+};
+
+Palette.prototype.hide = function()
+{
+	$('#palette').addClass('hide-scale');
+};
+
+Palette.prototype.modified = function()
+{
+	var _this = this;
 	
 	canvas.on('object:added', function(event)
 	{
-		var activeObject = event.target;
+		_this.activeObj = event.target;
+		_this.initPalette(_this.activeObj.get('type'));
+	});
+	
+	canvas.on('object:modified', function(event)
+	{
+		_this.activeObj = event.target;
+		_this.hideSubMenus();
+		console.log('object:modified');
+	});
+	
+	canvas.on('object:moving', function(event)
+	{
+		_this.hideSubMenus();
+	});
+	
+	canvas.on('object:selected', function(event)
+	{
+		_this.activeObj = event.target;
+		_this.hideSubMenus();
+		_this.initPalette(_this.activeObj.get('type'));
+		/*
 		switch(activeObject.get('type'))
 		{
 			case 'image':
@@ -294,50 +349,34 @@ Palette.prototype.addObj = function()
 				_this.activeObj = false;
 				break;
 		};
-	});
-};
-
-Palette.prototype.show = function()
-{
-	$('#palette').removeClass('hide-scale');
-};
-
-Palette.prototype.hide = function()
-{
-	$('#palette').addClass('hide-scale');
-};
-
-Palette.prototype.modified = function()
-{
-	var _this = this;
-	
-	canvas.on('object:modified', function(event)
-	{
-		_this.activeObj = event.target;
+		*/
 	});
 	
 	canvas.on('object:removed' , function(event)
 	{
 		_this.activeObj = false;
 		_this.hide();
+		// console.log('object:removed');
 	});
 	
 	canvas.on('canvas:cleared', function(event)
 	{
 		_this.activeObj = false;
 		_this.hide();
+		// console.log('canvas:cleared');
 	});
 	
 	canvas.on('selection:cleared', function(event)
 	{
 		_this.activeObj = false;
 		_this.hide();
+		// console.log('selection:cleared');
 	});
 	
 	canvas.on('selection:created', function(event)
 	{
-		console.log('selection made');
 		_this.show();
+		// console.log('selection:created');
 	});
 	
 	/*===== remove when I can get selection created to work ====*/

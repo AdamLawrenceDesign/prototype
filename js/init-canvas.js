@@ -2,6 +2,9 @@ $(function()
 {
 	var url, id, product, itemName, productID, webSiteName, userID;
 	
+	/*=================================*/
+	// Look at using this for storing cart info etc
+	
 	if(typeof(Storage) !== "undefined")
 	{
 		// Code for localStorage/sessionStorage.
@@ -14,9 +17,6 @@ $(function()
 		// Sorry! No Web Storage support..
 		console.log('Sorry No Web Storage');
 	}
-
-	// console.log(localStorage.test);
-	// console.log(localStorage.test2);
 
 	url = window.location.href;
 	id = url.substr(url.search("=") + 1, url.length);
@@ -76,6 +76,9 @@ $(function()
 					//============================= temporary 
 					
 					var themes = '';
+					
+					//*****************************************
+					// Major hack run query based on all templates
 					
 					if(value.id == '41')
 					{
